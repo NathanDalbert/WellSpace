@@ -37,6 +37,7 @@ public class Usuario {
     @Column(name = "dataNascimento", nullable = false)
     private String dataNascimento;
 
+
     public Usuario(String nome, String email, String senha, String fotoPerfil, Boolean integridade, String dataNascimento) {
         this.nome = nome;
         this.email = email;
