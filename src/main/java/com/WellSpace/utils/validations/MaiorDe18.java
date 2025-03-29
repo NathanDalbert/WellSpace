@@ -18,5 +18,5 @@ public @interface MaiorDe18 {
 
     Class<?>[] groups() default {};
 
-    Class<? extends Payload>[] payload() default {}; //  extras
+    Class<? extends Payload>[] payload() default {};
 }
