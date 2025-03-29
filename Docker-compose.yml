@@ -1,0 +1,10 @@
+services:
+  postgres:
+    image: postgres:latest
+    container_name: WellSapce_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: WellSpace
+    ports:
+      - "5432:5433"
