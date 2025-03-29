@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+
+import java.time.LocalDate;
 import java.util.UUID;
 
 @Getter
@@ -15,6 +17,7 @@ import java.util.UUID;
 @Entity(name = "usuario")
 @Table(name = "usuario")
 public class Usuario {
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID Usuario_id;
@@ -35,10 +38,9 @@ public class Usuario {
     private Boolean integridade;
 
     @Column(name = "dataNascimento", nullable = false)
-    private String dataNascimento;
+    private LocalDate dataNascimento;
 
-
-    public Usuario(String nome, String email, String senha, String fotoPerfil, Boolean integridade, String dataNascimento) {
+    public Usuario(String nome, String email, String senha, String fotoPerfil, Boolean integridade, LocalDate dataNascimento) {
         this.nome = nome;
         this.email = email;
         this.senha = senha;
@@ -47,7 +49,7 @@ public class Usuario {
         this.dataNascimento = dataNascimento;
     }
 
-    public  static  Usuario newUsuario(String nome, String email, String senha, String fotoPerfil, Boolean integridade, String dataNascimento) {
+    public static Usuario newUsuario(String nome, String email, String senha, String fotoPerfil, Boolean integridade, LocalDate dataNascimento) {
         return new Usuario(nome, email, senha, fotoPerfil, integridade, dataNascimento);
     }
 
