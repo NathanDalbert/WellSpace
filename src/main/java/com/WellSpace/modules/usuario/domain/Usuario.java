@@ -1,13 +1,18 @@
 package com.WellSpace.modules.usuario.domain;
 
+import com.WellSpace.modules.usuario.domain.ENUM.UsuarioRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 
 import java.time.LocalDate;
+import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -16,7 +21,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity(name = "usuario")
 @Table(name = "usuario")
-public class Usuario {
+public class Usuario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -39,6 +44,9 @@ public class Usuario {
 
     @Column(name = "dataNascimento", nullable = false)
     private LocalDate dataNascimento;
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 50)
+    private UsuarioRole usuarioRole;
 
     public Usuario(String nome, String email, String senha, String fotoPerfil, Boolean integridade, LocalDate dataNascimento) {
         this.nome = nome;
@@ -53,4 +61,21 @@ public class Usuario {
         return new Usuario(nome, email, senha, fotoPerfil, integridade, dataNascimento);
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return List.of();
+    }
+
+
+    @Override
+    public String getPassword() {
+
+        return this.senha;
+    }
+
+    @Override
+    public String getUsername() {
+
+        return this.email;
+    }
 }
