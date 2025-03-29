@@ -1,5 +1,6 @@
 package com.WellSpace.modules.usuario.DTO;
 
+import com.WellSpace.modules.usuario.domain.ENUM.UsuarioRole;
 import com.WellSpace.utils.validations.MaiorDe18;
 import jakarta.validation.constraints.*;
 
@@ -26,5 +27,6 @@ public record UsuarioRequest(
         @NotNull(message = "A data de nascimento é obrigatória")
         @PastOrPresent(message = "A data de nascimento não pode ser no futuro")
         @MaiorDe18()
-        LocalDate dataNascimento
+        LocalDate dataNascimento,
+        UsuarioRole usuarioRole
 ) {}
