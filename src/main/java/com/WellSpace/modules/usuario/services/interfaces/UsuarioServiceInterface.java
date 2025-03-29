@@ -9,7 +9,7 @@ import java.util.UUID;
 
 public interface UsuarioServiceInterface {
 
-    UsuarioResponse criarUsuario(@Valid UsuarioRequest usuarioRequest);
+
 
     UsuarioResponse buscarUsuarioPorId(UUID usuarioId);
 
