@@ -11,16 +11,16 @@ public class MaiorDe18Validator implements ConstraintValidator<MaiorDe18, LocalD
 
     @Override
     public void initialize(MaiorDe18 constraintAnnotation) {
-        // Inicialização, se necessário
+
     }
 
     @Override
     public boolean isValid(LocalDate dataNascimento, ConstraintValidatorContext context) {
         if (dataNascimento == null) {
-            return true; // Se for null, a anotação @NotNull deve validar
+            return true;
         }
         LocalDate dataAtual = LocalDate.now();
         int idade = Period.between(dataNascimento, dataAtual).getYears();
-        return idade >= 18; // Verifica se a idade é maior ou igual a 18
+        return idade >= 18;
     }
 }
