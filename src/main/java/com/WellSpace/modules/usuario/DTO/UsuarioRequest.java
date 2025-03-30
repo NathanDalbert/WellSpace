@@ -8,7 +8,7 @@ import java.time.LocalDate;
 
 public record UsuarioRequest(
         @NotBlank(message = "O nome é obrigatório")
-        @Size(min = 10, message = "O nome deve ter no mínimo 10 caracteres")
+        @Size(min = 10, message         = "O nome deve ter no mínimo 10 caracteres")
         String nome,
 
         @NotBlank(message = "O e-mail é obrigatório")
