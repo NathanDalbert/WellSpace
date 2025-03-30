@@ -1,15 +1,13 @@
 package com.WellSpace.modules.usuario.controller;
 
-import com.WellSpace.modules.usuario.DTO.UsuarioRequest;
 import com.WellSpace.modules.usuario.DTO.UsuarioResponse;
 import com.WellSpace.modules.usuario.DTO.UsuarioUpdateRequest;
 import com.WellSpace.modules.usuario.services.UsuarioService;
-
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
@@ -21,44 +19,45 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
-
-
-
+    // Endpoint para buscar o usuário pelo ID
     @PostMapping("/buscar")
-    public ResponseEntity<UsuarioResponse> buscarUsuarioPorId(@Valid @RequestBody UUID usuarioId) {
+    @PreAuthorize("hasRole('ADMIN') or hasRole('LOCATARIO')")
+    public ResponseEntity<UsuarioResponse> buscarUsuarioPorId(@RequestBody @Valid UsuarioUpdateRequest usuarioUpdateRequest) {
         try {
+
+            UUID usuarioId = usuarioUpdateRequest.usuarioId();
             UsuarioResponse usuarioResponse = usuarioService.buscarUsuarioPorId(usuarioId);
             return ResponseEntity.ok(usuarioResponse);
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new UsuarioResponse(
-                    null, "Erro", null, null, null, null));
+                    null, "Erro: " + e.getMessage(), null, null, null, null));
         }
     }
 
-
+    // Endpoint para atualizar os dados do usuário
     @PutMapping("/atualizar")
-    public ResponseEntity<UsuarioResponse> atualizarUsuario(@RequestParam UUID usuarioId, @Valid @RequestBody UsuarioUpdateRequest usuarioUpdateRequest) {
-
-
+    @PreAuthorize("hasRole('ADMIN') or hasRole('LOCATARIO')")
+    public ResponseEntity<UsuarioResponse> atualizarUsuario(@RequestBody @Valid UsuarioUpdateRequest usuarioUpdateRequest) {
         try {
-
+            UUID usuarioId = usuarioUpdateRequest.usuarioId();  // O ID do usuário é obtido do corpo da requisição
             UsuarioResponse usuarioResponse = usuarioService.atualizarUsuario(usuarioId, usuarioUpdateRequest);
             return ResponseEntity.ok(usuarioResponse);
         } catch (RuntimeException e) {
-
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new UsuarioResponse(
-                    null, "Erro", null, null, null, null));
+                    null, "Erro: " + e.getMessage(), null, null, null, null));
         }
     }
 
-
-    @PostMapping("/deletar")
-    public ResponseEntity<String> deletarUsuario(@Valid @RequestBody UUID usuarioId) {
+    // Endpoint para deletar o usuário
+    @DeleteMapping("/deletar")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('LOCATARIO')")
+    public ResponseEntity<String> deletarUsuario(@RequestBody @Valid UsuarioUpdateRequest usuarioUpdateRequest) {
         try {
+            UUID usuarioId = usuarioUpdateRequest.usuarioId();  // O ID do usuário é obtido do corpo da requisição
             usuarioService.deletarUsuario(usuarioId);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Usuário deletado com sucesso");
         } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Usuário não encontrado");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro ao deletar o usuário: " + e.getMessage());
         }
     }
 }
