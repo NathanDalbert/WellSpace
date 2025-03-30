@@ -1,6 +1,5 @@
 package com.WellSpace.modules.usuario.services.interfaces;
 
-import com.WellSpace.modules.usuario.DTO.UsuarioRequest;
 import com.WellSpace.modules.usuario.DTO.UsuarioResponse;
 import com.WellSpace.modules.usuario.DTO.UsuarioUpdateRequest;
 import jakarta.validation.Valid;
