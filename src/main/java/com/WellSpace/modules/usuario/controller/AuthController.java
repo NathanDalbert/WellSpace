@@ -1,7 +1,8 @@
 package com.WellSpace.modules.usuario.controller;
 
 import com.WellSpace.modules.usuario.DTO.UsuarioLogin;
-import com.WellSpace.modules.usuario.DTO.UsuarioRequest;
+
+import com.WellSpace.modules.usuario.DTO.UsuarioRegristro;
 import com.WellSpace.modules.usuario.services.AuthService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -19,8 +20,8 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/registrar")
-    public ResponseEntity<String> registrarUsuario(@RequestBody @Valid UsuarioRequest usuarioRequest) {
-        String token = authService.registrarUsuario(usuarioRequest);
+    public ResponseEntity<String> registrarUsuario(@RequestBody @Valid UsuarioRegristro usuarioRegristro) {
+        String token = authService.registrarUsuario(usuarioRegristro);
         return ResponseEntity.ok("Usuário registrado com sucesso. Token: " + token);
     }
 
