@@ -3,8 +3,10 @@ package com.WellSpace.modules.usuario.DTO;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
-public record UsuarioUpdateRequest(
+import java.util.UUID;
 
+public record UsuarioUpdateRequest(
+        UUID usuarioId,
         @NotBlank(message = "O nome é obrigatório")
         @Size(min = 10, message = "O nome deve ter no mínimo 10 caracteres")
         String nome,
