@@ -2,7 +2,8 @@ package com.WellSpace.modules.usuario.services;
 
 import com.WellSpace.Security.TokenService;
 import com.WellSpace.modules.usuario.DTO.UsuarioLogin;
-import com.WellSpace.modules.usuario.DTO.UsuarioRequest;
+import com.WellSpace.modules.usuario.DTO.UsuarioRegristro;
+
 import com.WellSpace.modules.usuario.domain.Usuario;
 import com.WellSpace.modules.usuario.domain.ENUM.UsuarioRole;
 import com.WellSpace.modules.usuario.repository.UsuarioRepository;
@@ -24,12 +25,13 @@ public class AuthService {
     private final UsuarioMapper usuarioMapper;
 
 
-    public String registrarUsuario(@Valid UsuarioRequest usuarioRegristro) {
+    public String registrarUsuario(@Valid UsuarioRegristro usuarioRegristro) {
 
 
         if (usuarioRepository.existsByEmail(usuarioRegristro.email())) {
             throw new RuntimeException("Email já cadastrado");
         }
+
 
 
         Usuario usuario = usuarioMapper.toEntity(usuarioRegristro);
@@ -40,7 +42,7 @@ public class AuthService {
         } else {
             usuario.setUsuarioRole(usuarioRegristro.usuarioRole());
         }
-
+            usuario.setEmail(usuarioRegristro.email());
 
         usuario.setSenha(passwordEncoder.encode(usuarioRegristro.senha()));
 
