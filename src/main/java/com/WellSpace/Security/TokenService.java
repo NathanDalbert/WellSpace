@@ -23,10 +23,9 @@ public class TokenService {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
-            // Convertendo a role para String (nome da role)
-            String role = user.getUsuarioRole().name();  // Aqui estamos pegando o nome da role como string
+            // Garantir que a role seja uma lista se for necessário
+            String role = user.getUsuarioRole().name(); // ou use uma lista se necessário, como Arrays.asList(role)
 
-            // Convertendo LocalDate para Date (para claims)
             Date dataNascimento = Date.from(user.getDataNascimento().atStartOfDay(ZoneOffset.UTC).toInstant());
 
             return JWT.create()
@@ -36,14 +35,15 @@ public class TokenService {
                     .withClaim("nome", user.getNome())
                     .withClaim("fotoPerfil", user.getFotoPerfil())
                     .withClaim("integridade", user.getIntegridade())
-                    .withClaim("dataNascimento", dataNascimento)  // Convertendo LocalDate para Date
-                    .withClaim("UsuarioRole", role)  // A role como uma String
-                    .withExpiresAt(getExpirationDate())  // Usando o método de expiração
+                    .withClaim("dataNascimento", dataNascimento)
+                    .withClaim("UsuarioRole", role) // Apenas uma String, pode ser convertido no filtro
+                    .withExpiresAt(getExpirationDate())
                     .sign(algorithm);
         } catch (Exception e) {
             throw new RuntimeException("Error generating token", e);
         }
     }
+
 
     public DecodedJWT validateToken(String token) {
         try {
