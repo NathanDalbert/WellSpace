@@ -3,6 +3,9 @@ package com.WellSpace.modules.usuario.controller;
 import com.WellSpace.modules.usuario.DTO.UsuarioResponse;
 import com.WellSpace.modules.usuario.DTO.UsuarioUpdateRequest;
 import com.WellSpace.modules.usuario.services.interfaces.UsuarioServiceInterface;
+import com.WellSpace.modules.usuario.exceptions.UsuarioNaoEncontradoException;
+import com.WellSpace.modules.usuario.exceptions.UsuarioJaCadastradoException;
+import com.WellSpace.modules.usuario.exceptions.SenhaIncorretaException;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -35,9 +38,9 @@ public class UsuarioController {
         try {
             UsuarioResponse usuarioResponse = usuarioService.buscarUsuarioPorId(id);
             return ResponseEntity.ok(usuarioResponse);
-        } catch (RuntimeException e) {
+        } catch (UsuarioNaoEncontradoException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new UsuarioResponse(
-                    null, "Erro: " + e.getMessage(), null, null, null, null));
+                    null, e.getMessage(), null, null, null, null));
         }
     }
 
@@ -53,9 +56,9 @@ public class UsuarioController {
             UUID usuarioId = usuarioUpdateRequest.usuarioId();
             UsuarioResponse usuarioResponse = usuarioService.atualizarUsuario(usuarioId, usuarioUpdateRequest);
             return ResponseEntity.ok(usuarioResponse);
-        } catch (RuntimeException e) {
+        } catch (UsuarioNaoEncontradoException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new UsuarioResponse(
-                    null, "Erro: " + e.getMessage(), null, null, null, null));
+                    null, e.getMessage(), null, null, null, null));
         }
     }
 
@@ -70,7 +73,7 @@ public class UsuarioController {
         try {
             usuarioService.deletarUsuario(id);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Usuário deletado com sucesso");
-        } catch (RuntimeException e) {
+        } catch (UsuarioNaoEncontradoException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro ao deletar o usuário: " + e.getMessage());
         }
     }
