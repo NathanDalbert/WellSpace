@@ -6,6 +6,7 @@ import com.WellSpace.modules.usuario.domain.Usuario;
 import com.WellSpace.modules.usuario.repository.UsuarioRepository;
 import com.WellSpace.modules.usuario.services.interfaces.UsuarioServiceInterface;
 import com.WellSpace.modules.usuario.services.mappers.UsuarioMapper;
+import com.WellSpace.modules.usuario.exceptions.UsuarioNaoEncontradoException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -23,14 +24,14 @@ public class UsuarioService implements UsuarioServiceInterface {
     @Override
     public UsuarioResponse buscarUsuarioPorId(UUID usuarioId) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado"));
         return usuarioMapper.toResponse(usuario);
     }
 
     @Override
     public UsuarioResponse atualizarUsuario(UUID usuarioId, UsuarioUpdateRequest usuarioUpdateRequest) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado"));
 
         if (usuarioUpdateRequest.nome() != null) {
             usuario.setNome(usuarioUpdateRequest.nome());
@@ -49,7 +50,7 @@ public class UsuarioService implements UsuarioServiceInterface {
     @Override
     public void deletarUsuario(UUID usuarioId) {
         Usuario usuario = usuarioRepository.findById(usuarioId)
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+                .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado"));
         usuarioRepository.delete(usuario);
     }
 }
