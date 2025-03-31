@@ -30,10 +30,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
-                        .requestMatchers("/usuario/**").hasAnyRole("LOCATARIO", "ADMIN")
+                        .anyRequest().authenticated()
 
                 )
-                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class) // Correção aqui
+                .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

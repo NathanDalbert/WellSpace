@@ -12,7 +12,7 @@ import java.util.Optional;
 @Component
 public class UsuarioMapper {
 
-    // Corrigido: agora o parâmetro é UsuarioRequest e não String
+
     public Usuario toEntity(@Valid UsuarioRegristro usuarioRequest) {
         return Usuario.newUsuario(
                 usuarioRequest.nome(),
