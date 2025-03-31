@@ -19,7 +19,6 @@ public class UsuarioController {
 
     private final UsuarioService usuarioService;
 
-    // Endpoint para buscar o usuário pelo ID
     @PostMapping("/buscar")
     @PreAuthorize("hasRole('ADMIN') or hasRole('LOCATARIO')")
     public ResponseEntity<UsuarioResponse> buscarUsuarioPorId(@RequestBody @Valid UsuarioUpdateRequest usuarioUpdateRequest) {
@@ -34,12 +33,12 @@ public class UsuarioController {
         }
     }
 
-    // Endpoint para atualizar os dados do usuário
+
     @PutMapping("/atualizar")
     @PreAuthorize("hasRole('ADMIN') or hasRole('LOCATARIO')")
     public ResponseEntity<UsuarioResponse> atualizarUsuario(@RequestBody @Valid UsuarioUpdateRequest usuarioUpdateRequest) {
         try {
-            UUID usuarioId = usuarioUpdateRequest.usuarioId();  // O ID do usuário é obtido do corpo da requisição
+            UUID usuarioId = usuarioUpdateRequest.usuarioId();
             UsuarioResponse usuarioResponse = usuarioService.atualizarUsuario(usuarioId, usuarioUpdateRequest);
             return ResponseEntity.ok(usuarioResponse);
         } catch (RuntimeException e) {
@@ -48,12 +47,11 @@ public class UsuarioController {
         }
     }
 
-    // Endpoint para deletar o usuário
     @DeleteMapping("/deletar")
     @PreAuthorize("hasRole('ADMIN') or hasRole('LOCATARIO')")
     public ResponseEntity<String> deletarUsuario(@RequestBody @Valid UsuarioUpdateRequest usuarioUpdateRequest) {
         try {
-            UUID usuarioId = usuarioUpdateRequest.usuarioId();  // O ID do usuário é obtido do corpo da requisição
+            UUID usuarioId = usuarioUpdateRequest.usuarioId();
             usuarioService.deletarUsuario(usuarioId);
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Usuário deletado com sucesso");
         } catch (RuntimeException e) {
