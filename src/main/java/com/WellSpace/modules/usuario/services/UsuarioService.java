@@ -9,13 +9,14 @@ import com.WellSpace.modules.usuario.services.mappers.UsuarioMapper;
 import com.WellSpace.modules.usuario.exceptions.UsuarioNaoEncontradoException;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
 @Transactional
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class UsuarioService implements UsuarioServiceInterface {
 
     private final UsuarioRepository usuarioRepository;

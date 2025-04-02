@@ -3,6 +3,7 @@ package com.WellSpace.modules.localidades.controller;
 import com.WellSpace.modules.localidades.DTO.LocalidadesRequest;
 import com.WellSpace.modules.localidades.DTO.LocalidadesResponse;
 import com.WellSpace.modules.localidades.services.LocalidadesService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,13 +14,12 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/localidades")
+@RequiredArgsConstructor
 public class LocalidadesController {
 
     private final LocalidadesService localidadesService;
 
-    public LocalidadesController(LocalidadesService localidadesService) {
-        this.localidadesService = localidadesService;
-    }
+
 
     @PostMapping
     public ResponseEntity<LocalidadesResponse> createLocalidade(

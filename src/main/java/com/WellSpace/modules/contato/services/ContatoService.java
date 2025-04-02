@@ -6,6 +6,7 @@ import com.WellSpace.modules.contato.DTO.ContatoResponse;
 import com.WellSpace.modules.contato.services.mappers.ContatoMapper;
 import com.WellSpace.modules.contato.repository.ContatoRepository;
 import com.WellSpace.modules.contato.services.interfaces.ContatoServiceInterface;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +15,14 @@ import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class ContatoService implements ContatoServiceInterface {
 
-    @Autowired
-    private ContatoRepository contatoRepository;
 
-    @Autowired
-    private ContatoMapper contatoMapper;
+    private final ContatoRepository contatoRepository;
+
+
+    private final ContatoMapper contatoMapper;
 
     @Override
     public ContatoResponse criarContato(ContatoRequest contatoRequest) {
