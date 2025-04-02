@@ -26,7 +26,7 @@ public class UsuarioMapper {
 
     public UsuarioResponse toResponse(Usuario usuario) {
         return new UsuarioResponse(
-                usuario.getUsuario_id(),
+                usuario.getUsuarioId(),
                 usuario.getNome(),
                 usuario.getEmail(),
                 Optional.ofNullable(usuario.getFotoPerfil()),
