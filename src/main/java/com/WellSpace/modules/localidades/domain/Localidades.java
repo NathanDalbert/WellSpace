@@ -16,45 +16,6 @@ import java.util.UUID;
 @Entity(name= "localidades")
 @Table(name= "localidades")
 public class Localidades {
-    public UUID getLocalidadeId() {
-        return localidadeId;
-    }
-
-    public void setLocalidadeId(UUID localidadeId) {
-        this.localidadeId = localidadeId;
-    }
-
-    public String getNomeLocal() {
-        return nomeLocal;
-    }
-
-    public void setNomeLocal(String nomeLocal) {
-        this.nomeLocal = nomeLocal;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public String getLocalizacao() {
-        return localizacao;
-    }
-
-    public void setLocalizacao(String localizacao) {
-        this.localizacao = localizacao;
-    }
-
-    public Usuario getLocador() {
-        return locador;
-    }
-
-    public void setLocador(Usuario locador) {
-        this.locador = locador;
-    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -66,7 +27,7 @@ public class Localidades {
     @Column(name = "descricao", nullable = false, columnDefinition = "TEXT")
     private String descricao;
 
-    @Column(name = "localizacao", nullable = false, columnDefinition = "POINT")
+    @Column(name = "localizacao", nullable = false)
     private String localizacao;
 
     @ManyToOne
