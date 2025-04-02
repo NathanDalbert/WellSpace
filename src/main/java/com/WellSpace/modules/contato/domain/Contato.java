@@ -19,14 +19,16 @@ public class Contato {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID contato_id;
+    private UUID contatoId;
 
-    @ManyToOne
-    @JoinColumn(name = "usuario_id", nullable = false)
-    private Usuario usuario;
+
 
     @Column(name = "contato", nullable = false)
     private String contato;
+    @ManyToOne
+    @JoinColumn(name = "usuarioId", nullable = false)
+    private Usuario usuario;
+
 
     public Contato(Usuario usuario, String contato) {
         this.usuario = usuario;
