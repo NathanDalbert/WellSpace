@@ -17,6 +17,16 @@ CREATE TABLE contato (
     CONSTRAINT fk_contato_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id) ON DELETE CASCADE
 );
 
+
+ CREATE TABLE localidades (
+     localidade_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+     nome_local VARCHAR(255) NOT NULL,
+     descricao TEXT NOT NULL,
+     localizacao VARCHAR(255) NOT NULL,
+     locador_id UUID,
+     CONSTRAINT fk_locador FOREIGN KEY (locador_id) REFERENCES usuario(id)
+ );
+
 CREATE TABLE salas (
     salas_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     localidade_id UUID,
