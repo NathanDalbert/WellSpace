@@ -25,7 +25,7 @@ public class LocalidadesMapper {
                 localidade.getNomeLocal(),
                 localidade.getDescricao(),
                 localidade.getLocalizacao(),
-                localidade.getLocador() != null ? localidade.getLocador().getUsuario_id() : null
+                localidade.getLocador() != null ? localidade.getLocador().getUsuarioId() : null
         );
     }
 }
