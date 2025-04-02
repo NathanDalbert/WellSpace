@@ -3,6 +3,7 @@ package com.WellSpace.Security;
 import com.WellSpace.modules.usuario.domain.Usuario;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,27 +24,25 @@ public class TokenService {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
-            // Garantir que a role seja uma lista se for necessário
-            String role = user.getUsuarioRole().name(); // ou use uma lista se necessário, como Arrays.asList(role)
+            String role = user.getUsuarioRole().name();
 
             Date dataNascimento = Date.from(user.getDataNascimento().atStartOfDay(ZoneOffset.UTC).toInstant());
 
             return JWT.create()
                     .withIssuer("WellSpace")
                     .withSubject(user.getEmail())
-                    .withClaim("usuario_id", user.getUsuario_id().toString())
+                    .withClaim("usuarioId", user.getUsuarioId().toString())
                     .withClaim("nome", user.getNome())
                     .withClaim("fotoPerfil", user.getFotoPerfil())
                     .withClaim("integridade", user.getIntegridade())
                     .withClaim("dataNascimento", dataNascimento)
-                    .withClaim("UsuarioRole", role) // Apenas uma String, pode ser convertido no filtro
+                    .withClaim("UsuarioRole", role)
                     .withExpiresAt(getExpirationDate())
                     .sign(algorithm);
         } catch (Exception e) {
             throw new RuntimeException("Error generating token", e);
         }
     }
-
 
     public DecodedJWT validateToken(String token) {
         try {
@@ -52,17 +51,21 @@ public class TokenService {
                     .withIssuer("WellSpace")
                     .build()
                     .verify(token);
+        } catch (JWTDecodeException e) {
+            throw new RuntimeException("Error decoding the token: " + e.getMessage(), e);
+        } catch (JWTVerificationException e) {
+            throw new RuntimeException("Invalid token: " + e.getMessage(), e);
         } catch (Exception e) {
-            throw new RuntimeException("Invalid token", e);
+            throw new RuntimeException("Unexpected error validating token: " + e.getMessage(), e);
         }
     }
 
     private Instant getExpirationDate() {
-        return LocalDate.now().plusDays(1).atStartOfDay(ZoneOffset.UTC).toInstant();
+        return LocalDate.now().plusDays(7).atStartOfDay(ZoneOffset.UTC).toInstant();
     }
 
     public String decodeToken(String token) {
-        token = token.replace("Bearer ", "");
+        token = token.replace("Bearer", "");
 
         Algorithm algorithm = Algorithm.HMAC256(secret);
 

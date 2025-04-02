@@ -1,5 +1,6 @@
 package com.WellSpace.modules.usuario.domain;
 
+import com.WellSpace.modules.contato.domain.Contato;
 import com.WellSpace.modules.usuario.domain.ENUM.UsuarioRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,7 +26,7 @@ public class Usuario implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private UUID Usuario_id;
+    private UUID usuarioId;
 
     @Column(name = "nome", nullable = false)
     private String nome;
@@ -48,6 +49,8 @@ public class Usuario implements UserDetails {
     @Column(nullable = false, length = 50)
     private UsuarioRole usuarioRole;
 
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Contato> contatos;
     public Usuario(String nome, String email, String senha, String fotoPerfil, Boolean integridade, LocalDate dataNascimento) {
         this.nome = nome;
         this.email = email;
