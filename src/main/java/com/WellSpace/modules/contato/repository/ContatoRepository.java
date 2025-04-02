@@ -14,7 +14,8 @@ public interface ContatoRepository extends JpaRepository<Contato, UUID> {
 
     Optional<Contato> findById(UUID contatoId);
 
-    List<Contato> findByUsuario_Usuario_id(UUID usuarioId);
+    List<Contato> findByUsuario_UsuarioId(UUID usuarioId);
 
-    boolean existsByUsuario_Usuario_id(UUID usuarioId);
+
+
 }

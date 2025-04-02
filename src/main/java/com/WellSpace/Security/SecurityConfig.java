@@ -30,12 +30,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
+                        .requestMatchers("/usuario/**").hasAnyRole("LOCATARIO", "LOCADOR")
+                        .requestMatchers("/contrato/**").hasAnyRole("LOCATARIO", "LOCADOR")
                         .anyRequest().authenticated()
-
                 )
+
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
+
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {

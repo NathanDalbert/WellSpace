@@ -36,10 +36,10 @@ public class SecurityFilter extends OncePerRequestFilter {
             String role = auth.getClaim("UsuarioRole").asString();
 
             if (role != null) {
-                // Caso seja uma única role, cria um único GrantedAuthority
+
                 var grants = List.of(new SimpleGrantedAuthority("ROLE_" + role));
 
-                request.setAttribute("user_id", auth.getSubject());
+                request.setAttribute("usuarioId", auth.getSubject());
 
                 var authentication = new UsernamePasswordAuthenticationToken(auth.getSubject(), null, grants);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
@@ -55,6 +55,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         if (authHeader == null || authHeader.isBlank()) {
             return null;
         }
-        return authHeader.replace("Bearer ", "");
+        return authHeader.replace("Bearer", "").trim();
     }
+
 }

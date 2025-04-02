@@ -47,7 +47,7 @@ public class ContatoService implements ContatoServiceInterface {
 
     @Override
     public List<ContatoResponse> buscarContatosPorUsuario(UUID usuarioId) {
-        List<Contato> contatos = contatoRepository.findByUsuario_Usuario_id(usuarioId);
+        List<Contato> contatos = contatoRepository. findByUsuario_UsuarioId(usuarioId);
         return contatos.stream()
                 .map(contatoMapper::toResponse)
                 .collect(Collectors.toList());

@@ -24,8 +24,8 @@ public class ContatoMapper {
 
     public ContatoResponse toResponse(Contato contato) {
         return new ContatoResponse(
-                contato.getContato_id(),
-                contato.getUsuario().getUsuario_id(),
+                contato.getContatoId(),
+                contato.getUsuario().getUsuarioId(),
                 contato.getContato());
     }
 
