@@ -32,6 +32,7 @@ public class SecurityConfig {
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/usuario/**").hasAnyRole("LOCATARIO", "LOCADOR")
                         .requestMatchers("/contrato/**").hasAnyRole("LOCATARIO", "LOCADOR")
+                        .requestMatchers("/api/localidades").hasAnyRole("LOCATARIO")
                         .anyRequest().authenticated()
                 )
 
