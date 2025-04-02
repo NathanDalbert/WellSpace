@@ -1,0 +1,2 @@
+ALTER TABLE contato
+MODIFY COLLUMN telefone char(11) NOT NULL,
