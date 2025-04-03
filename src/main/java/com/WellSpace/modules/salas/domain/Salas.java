@@ -48,17 +48,5 @@ public class Salas {
     private DisponibilidadeSalaEnum disponibilidadeSala;
 
 
-    public  Salas(String descricao, String tamanho, Float precoHora, String disponibilidadeDiaSemana, LocalTime disponibilidadeInicio, LocalTime disponibilidadeFim, DisponibilidadeSalaEnum disponibilidadeSala) {
-        this.descricao = descricao;
-        this.tamanho = tamanho;
-        this.precoHora = precoHora;
-        this.disponibilidadeDiaSemana = disponibilidadeDiaSemana;
-        this.disponibilidadeInicio = disponibilidadeInicio;
-        this.disponibilidadeFim = disponibilidadeFim;
-        this.disponibilidadeSala = disponibilidadeSala;
-    }
 
-    public  static  Salas newSala(String descricao, String tamanho, Float precoHora, String disponibilidadeDiaSemana, LocalTime disponibilidadeInicio, LocalTime disponibilidadeFim, DisponibilidadeSalaEnum disponibilidadeSala) {
-        return new Salas(descricao, tamanho, precoHora, disponibilidadeDiaSemana, disponibilidadeInicio, disponibilidadeFim, disponibilidadeSala);
-    }
 }
