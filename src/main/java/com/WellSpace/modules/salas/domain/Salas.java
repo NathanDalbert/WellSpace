@@ -1,14 +1,16 @@
 package com.WellSpace.modules.salas.domain;
 
 
-import com.WellSpace.modules.salas.domain.ENUM.DisponibilidadeEnum;
+
+import com.WellSpace.modules.salas.domain.ENUM.DisponibilidadeSalaEnum;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Getter
@@ -32,24 +34,31 @@ public class Salas {
     private String tamanho;
     @Column(name = "preco_hora", nullable = false)
     private Float precoHora;
-    @Column(name = "horario_inicio", nullable = false)
-    private LocalDateTime horarioInicio;
-    @Column(name = "horario_fim", nullable = false)
-    private LocalDateTime horarioFim;
+    @Column(name = "disponibilidade_dia_semana", nullable = false)
+    private String disponibilidadeDiaSemana;
+
+    @Column(name = "disponibilidade_inicio", nullable = false)
+    private LocalTime disponibilidadeInicio;
+
+    @Column(name = "disponibilidade_fim", nullable = false)
+    private LocalTime disponibilidadeFim;
+
     @Column(name = "disponibilidade", nullable = false)
-    private DisponibilidadeEnum disponibilidade;
+    @Enumerated(EnumType.STRING)
+    private DisponibilidadeSalaEnum disponibilidadeSala;
 
 
-    public  Salas(String descricao, String tamanho, Float precoHora, LocalDateTime horarioInicio, LocalDateTime horarioFim, DisponibilidadeEnum disponibilidade) {
+    public  Salas(String descricao, String tamanho, Float precoHora, String disponibilidadeDiaSemana, LocalTime disponibilidadeInicio, LocalTime disponibilidadeFim, DisponibilidadeSalaEnum disponibilidadeSala) {
         this.descricao = descricao;
         this.tamanho = tamanho;
         this.precoHora = precoHora;
-        this.horarioInicio = horarioInicio;
-        this.horarioFim = horarioFim;
-        this.disponibilidade = disponibilidade;
-    }
-    public  static  Salas newSalas(String descricao, String tamanho, Float precoHora, LocalDateTime horarioInicio, LocalDateTime horarioFim, DisponibilidadeEnum disponibilidade) {
-        return new Salas(descricao, tamanho, precoHora, horarioInicio, horarioFim, disponibilidade);
+        this.disponibilidadeDiaSemana = disponibilidadeDiaSemana;
+        this.disponibilidadeInicio = disponibilidadeInicio;
+        this.disponibilidadeFim = disponibilidadeFim;
+        this.disponibilidadeSala = disponibilidadeSala;
     }
 
+    public  static  Salas newSala(String descricao, String tamanho, Float precoHora, String disponibilidadeDiaSemana, LocalTime disponibilidadeInicio, LocalTime disponibilidadeFim, DisponibilidadeSalaEnum disponibilidadeSala) {
+        return new Salas(descricao, tamanho, precoHora, disponibilidadeDiaSemana, disponibilidadeInicio, disponibilidadeFim, disponibilidadeSala);
+    }
 }

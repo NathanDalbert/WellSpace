@@ -1,7 +1,9 @@
 package com.WellSpace.modules.salas.domain.ENUM;
 
-public enum DisponibilidadeEnum {
+public enum DisponibilidadeSalaEnum {
 
     DISPONIVEL,
     OCUPADO,
+    AGENDADA,
+    INDISPONIVEL
 }
