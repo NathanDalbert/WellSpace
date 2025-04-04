@@ -17,6 +17,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -76,5 +77,10 @@ public class UsuarioController {
         } catch (UsuarioNaoEncontradoException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Erro ao deletar o usuário: " + e.getMessage());
         }
+    }
+    @GetMapping("/buscar-todos")
+    public ResponseEntity<List<UsuarioResponse>> buscarTodosUsuarios() {
+        List<UsuarioResponse> usuarios = usuarioService.buscarTodosUsuarios();
+        return ResponseEntity.ok(usuarios);
     }
 }

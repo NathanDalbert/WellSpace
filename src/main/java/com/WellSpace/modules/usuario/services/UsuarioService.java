@@ -12,7 +12,9 @@ import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -54,4 +56,12 @@ public class UsuarioService implements UsuarioServiceInterface {
                 .orElseThrow(() -> new UsuarioNaoEncontradoException("Usuário não encontrado"));
         usuarioRepository.delete(usuario);
     }
+    @Override
+    public List<UsuarioResponse> buscarTodosUsuarios() {
+        List<Usuario> usuarios = usuarioRepository.findAll();
+        return usuarios.stream()
+                .map(usuarioMapper::toResponse)
+                .collect(Collectors.toList());
+    }
 }
+

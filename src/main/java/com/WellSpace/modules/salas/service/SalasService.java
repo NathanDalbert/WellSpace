@@ -5,6 +5,7 @@ import com.WellSpace.modules.salas.DTO.SalasResponse;
 import com.WellSpace.modules.salas.domain.ENUM.DisponibilidadeSalaEnum;
 import com.WellSpace.modules.salas.domain.Salas;
 import com.WellSpace.modules.salas.repository.SalasRepository;
+
 import com.WellSpace.modules.salas.service.Mapper.SalasMapper;
 import com.WellSpace.modules.salas.service.interfaces.SalasServiceInterface;
 import lombok.RequiredArgsConstructor;
@@ -15,67 +16,78 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-
 @Service
 @RequiredArgsConstructor
 public class SalasService implements SalasServiceInterface {
+
     private final SalasRepository salasRepository;
     private final SalasMapper salasMapper;
-
 
     @Override
     public SalasResponse criarSala(SalasRequest salasRequest) {
 
-        Salas sala = salasMapper.toSalas(salasRequest);
-        Salas salaSalva = salasRepository.save(sala);
-        return salasMapper.toSalasResponse(salaSalva);
-    }
+        Salas sala = salasMapper.toEntity(salasRequest);
 
+        Salas salaSalva = salasRepository.save(sala);
+
+        return salasMapper.toResponse(salaSalva);
+    }
 
     @Override
     public List<SalasResponse> listarSalas() {
+
         List<Salas> salas = salasRepository.findAll();
+
         return salas.stream()
-                .map(salasMapper::toSalasResponse)
+                .map(salasMapper::toResponse)
                 .toList();
     }
 
     @Override
     public List<SalasResponse> listarSalasPorDisponibilidade(DisponibilidadeSalaEnum disponibilidadeSala) {
+
         List<Salas> salas = salasRepository.findByDisponibilidadeSala(disponibilidadeSala);
+
         return salas.stream()
-                .map(salasMapper::toSalasResponse)
+                .map(salasMapper::toResponse)
                 .toList();
     }
 
     @Override
     public List<SalasResponse> buscarSalasPorHorario(LocalTime inicio, LocalTime fim) {
+
         List<Salas> salas = salasRepository.findAll();
         return salas.stream()
-                .filter(sala -> sala.getDisponibilidadeInicio().isAfter(inicio) && sala.getDisponibilidadeFim().isBefore(fim))
-                .map(salasMapper::toSalasResponse)
+                .filter(sala -> isWithinTimeRange(sala, inicio, fim))
+                .map(salasMapper::toResponse)
                 .toList();
     }
 
     @Override
     public void deletarSala(UUID id) {
-        if (salasRepository.existsById(id)) {
-            salasRepository.deleteById(id);
-        } else {
+
+        if (!salasRepository.existsById(id)) {
             throw new RuntimeException("Sala não encontrada para exclusão");
         }
+        salasRepository.deleteById(id);
     }
 
     @Override
     public SalasResponse alterarDisponibilidade(UUID id, DisponibilidadeSalaEnum disponibilidadeSala) {
+
         Optional<Salas> salaOptional = salasRepository.findById(id);
-        if (salaOptional.isPresent()) {
-            Salas sala = salaOptional.get();
-            sala.setDisponibilidadeSala(disponibilidadeSala);
-            Salas salaAtualizada = salasRepository.save(sala);
-            return salasMapper.toSalasResponse(salaAtualizada);
-        } else {
+        if (salaOptional.isEmpty()) {
             throw new RuntimeException("Sala não encontrada para alteração de disponibilidade");
         }
+
+        Salas sala = salaOptional.get();
+        sala.setDisponibilidadeSala(disponibilidadeSala);
+        Salas salaAtualizada = salasRepository.save(sala);
+
+        return salasMapper.toResponse(salaAtualizada);
+    }
+
+    private boolean isWithinTimeRange(Salas sala, LocalTime inicio, LocalTime fim) {
+        return !sala.getDisponibilidadeInicio().isBefore(inicio) && !sala.getDisponibilidadeFim().isAfter(fim);
     }
 }
