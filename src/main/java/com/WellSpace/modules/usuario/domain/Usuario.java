@@ -22,7 +22,7 @@ import java.util.UUID;
 @NoArgsConstructor
 @Entity(name = "usuario")
 @Table(name = "usuario")
-public class Usuario implements UserDetails {
+public class Usuario  {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -52,6 +52,7 @@ public class Usuario implements UserDetails {
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Contato> contatos;
 
+
     public Usuario(String nome, String email, String senha, String fotoPerfil, Boolean integridade, LocalDate dataNascimento) {
         this.nome = nome;
         this.email = email;
@@ -65,21 +66,5 @@ public class Usuario implements UserDetails {
         return new Usuario(nome, email, senha, fotoPerfil, integridade, dataNascimento);
     }
 
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
-    }
 
-
-    @Override
-    public String getPassword() {
-
-        return this.senha;
-    }
-
-    @Override
-    public String getUsername() {
-
-        return this.email;
-    }
 }
