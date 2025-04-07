@@ -12,4 +12,5 @@ import java.util.UUID;
 public interface SalasRepository extends JpaRepository<Salas, UUID> {
     List<Salas> findAll();
     List<Salas> findByDisponibilidadeSala(DisponibilidadeSalaEnum disponibilidadeSala);
+    boolean existsByNomeSala(String nomeSala);
 }
