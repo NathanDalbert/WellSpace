@@ -5,9 +5,11 @@ import com.WellSpace.modules.salas.DTO.SalasResponse;
 import com.WellSpace.modules.salas.domain.ENUM.DisponibilidadeSalaEnum;
 import com.WellSpace.modules.salas.domain.Salas;
 import com.WellSpace.modules.salas.repository.SalasRepository;
-
 import com.WellSpace.modules.salas.service.Mapper.SalasMapper;
 import com.WellSpace.modules.salas.service.interfaces.SalasServiceInterface;
+import com.WellSpace.modules.salas.execepitons.SalaHJaExisteException;
+import com.WellSpace.modules.salas.execepitons.SalaNaoEncontradaException;
+import com.WellSpace.modules.salas.execepitons.TempoInvalidoException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,15 @@ public class SalasService implements SalasServiceInterface {
     @Override
     public SalasResponse criarSala(SalasRequest salasRequest) {
 
+        if (salasRepository.existsByNomeSala(salasRequest.nomeSala())) {
+            throw new SalaHJaExisteException("Já existe uma sala com o nome " + salasRequest.nomeSala());
+        }
+
+        if (salasRequest.disponibilidadeInicio().isAfter(salasRequest.disponibilidadeFim())) {
+            throw new TempoInvalidoException("O horário de início não pode ser depois do horário de fim.");
+        }
+
+
         Salas sala = salasMapper.toEntity(salasRequest);
 
         Salas salaSalva = salasRepository.save(sala);
@@ -35,9 +46,7 @@ public class SalasService implements SalasServiceInterface {
 
     @Override
     public List<SalasResponse> listarSalas() {
-
         List<Salas> salas = salasRepository.findAll();
-
         return salas.stream()
                 .map(salasMapper::toResponse)
                 .toList();
@@ -45,9 +54,7 @@ public class SalasService implements SalasServiceInterface {
 
     @Override
     public List<SalasResponse> listarSalasPorDisponibilidade(DisponibilidadeSalaEnum disponibilidadeSala) {
-
         List<Salas> salas = salasRepository.findByDisponibilidadeSala(disponibilidadeSala);
-
         return salas.stream()
                 .map(salasMapper::toResponse)
                 .toList();
@@ -55,7 +62,6 @@ public class SalasService implements SalasServiceInterface {
 
     @Override
     public List<SalasResponse> buscarSalasPorHorario(LocalTime inicio, LocalTime fim) {
-
         List<Salas> salas = salasRepository.findAll();
         return salas.stream()
                 .filter(sala -> isWithinTimeRange(sala, inicio, fim))
@@ -67,17 +73,16 @@ public class SalasService implements SalasServiceInterface {
     public void deletarSala(UUID id) {
 
         if (!salasRepository.existsById(id)) {
-            throw new RuntimeException("Sala não encontrada para exclusão");
+            throw new SalaNaoEncontradaException("Sala com ID " + id + " não encontrada para exclusão.");
         }
         salasRepository.deleteById(id);
     }
 
     @Override
     public SalasResponse alterarDisponibilidade(UUID id, DisponibilidadeSalaEnum disponibilidadeSala) {
-
         Optional<Salas> salaOptional = salasRepository.findById(id);
         if (salaOptional.isEmpty()) {
-            throw new RuntimeException("Sala não encontrada para alteração de disponibilidade");
+            throw new SalaNaoEncontradaException("Sala com ID " + id + " não encontrada para alteração de disponibilidade.");
         }
 
         Salas sala = salaOptional.get();
