@@ -3,6 +3,8 @@ package com.WellSpace.modules.localidades.controller;
 import com.WellSpace.modules.localidades.DTO.LocalidadesRequest;
 import com.WellSpace.modules.localidades.DTO.LocalidadesResponse;
 import com.WellSpace.modules.localidades.services.LocalidadesService;
+
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +25,12 @@ public class LocalidadesController {
 
     @PostMapping
     public ResponseEntity<LocalidadesResponse> createLocalidade(
-            @RequestBody LocalidadesRequest requestDTO,
-            @RequestHeader("Usuario-Id") UUID usuarioid) {
+            @Valid @RequestBody LocalidadesRequest requestDTO) {
 
-        LocalidadesResponse localidadeResponse = localidadesService.createLocalidade(requestDTO, usuarioid);
-        return new ResponseEntity<>(localidadeResponse, HttpStatus.CREATED);
+        LocalidadesResponse response = localidadesService.createLocalidade(requestDTO, requestDTO.locador());
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
 
     @GetMapping
     public ResponseEntity<List<LocalidadesResponse>> getAllLocalidades() {
