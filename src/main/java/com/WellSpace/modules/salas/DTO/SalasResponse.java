@@ -1,19 +1,40 @@
 package com.WellSpace.modules.salas.DTO;
 
 import com.WellSpace.modules.salas.domain.ENUM.DisponibilidadeSalaEnum;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 
 import java.time.LocalTime;
 import java.util.UUID;
 
 public record SalasResponse(
 
+        @NotNull(message = "O ID da sala não pode ser nulo")
         UUID salasId,
+
+        @NotBlank(message = "O nome da sala não pode estar vazio")
         String nomeSala,
+
+        @NotBlank(message = "A descrição não pode estar vazia")
         String descricao,
+
+        @NotBlank(message = "O tamanho não pode estar vazio")
         String tamanho,
+
+        @Positive(message = "O preço por hora deve ser um valor positivo")
         Float precoHora,
+
+        @NotBlank(message = "A disponibilidade durante a semana não pode estar vazia")
         String disponibilidadeDiaSemana,
+
+        @NotNull(message = "O horário de início não pode ser nulo")
         LocalTime disponibilidadeInicio,
+
+        @NotNull(message = "O horário de fim não pode ser nulo")
         LocalTime disponibilidadeFim,
+
+        @NotNull(message = "A disponibilidade da sala deve ser informada")
         DisponibilidadeSalaEnum disponibilidadeSala) {
+
 }
