@@ -8,25 +8,27 @@ import com.WellSpace.modules.salas.domain.Salas;
 import com.WellSpace.modules.salas.repository.SalasRepository;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import jakarta.transaction.Transactional;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Map;
 import java.util.UUID;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
+@Transactional
 public class SalasImagesService {
 
-    @Autowired
-    private SalasImagesRepository repository;
+    private final SalasImagesRepository repository;
 
-    @Autowired
-    private SalasRepository salasRepository;
+    private final SalasRepository salasRepository;
 
-    @Autowired
-    private Cloudinary cloudinary;
+    private final Cloudinary cloudinary;
 
     public SalasImages salvarImagem(UUID salasId, SalasImagesRequest request) throws IOException {
         MultipartFile file = request.imagem();
