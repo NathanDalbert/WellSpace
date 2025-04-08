@@ -4,6 +4,8 @@ import com.WellSpace.modules.salas.DTO.SalasRequest;
 import com.WellSpace.modules.salas.DTO.SalasResponse;
 import com.WellSpace.modules.salas.domain.ENUM.DisponibilidadeSalaEnum;
 import com.WellSpace.modules.salas.service.interfaces.SalasServiceInterface;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +23,10 @@ public class SalasController {
     private final SalasServiceInterface salasServiceInterface;
 
     @PostMapping("/criar-sala")
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Sala criada com sucesso!"), @ApiResponse(responseCode = "400", description = "Erro na validação dos dados de sala"), @ApiResponse(responseCode = "500", description = "Erro interno do servidor")}
+
+
+    )
     public ResponseEntity<SalasResponse> criarSala(@RequestBody @Valid SalasRequest salasRequest) {
         try {
             SalasResponse response = salasServiceInterface.criarSala(salasRequest);
@@ -31,6 +37,7 @@ public class SalasController {
     }
 
     @GetMapping("/listar-salas")
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Lista de salas retornada com sucesso!"), @ApiResponse(responseCode = "500", description = "Erro interno do servidor")})
     public ResponseEntity<List<SalasResponse>> listarSalas() {
         try {
             List<SalasResponse> salas = salasServiceInterface.listarSalas();
@@ -41,8 +48,8 @@ public class SalasController {
     }
 
     @GetMapping("/listar-salas/disponibilidade/{disponibilidadeSala}")
-    public ResponseEntity<List<SalasResponse>> listarSalasPorDisponibilidade(
-            @PathVariable DisponibilidadeSalaEnum disponibilidadeSala) {
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Lista de salas por disponibilidade retornada com sucesso!"), @ApiResponse(responseCode = "400", description = "Valor inválido para disponibilidade de sala "),@ApiResponse(responseCode = "500", description = "Erro interno do servidor")})
+    public ResponseEntity<List<SalasResponse>> listarSalasPorDisponibilidade(@PathVariable DisponibilidadeSalaEnum disponibilidadeSala) {
         try {
             List<SalasResponse> salas = salasServiceInterface.listarSalasPorDisponibilidade(disponibilidadeSala);
             return ResponseEntity.ok(salas);
@@ -52,8 +59,12 @@ public class SalasController {
     }
 
     @GetMapping("/buscar-salas/horario")
-    public ResponseEntity<List<SalasResponse>> buscarSalasPorHorario(
-            @RequestParam @Valid LocalTime inicio, @RequestParam @Valid LocalTime fim) {
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de salas retornada com sucesso para o intervalo de horário fornecido"),
+            @ApiResponse(responseCode = "400", description = "Erro na validação dos horários de busca"),
+            @ApiResponse(responseCode = "500", description = "Erro interno ao buscar salas por horário")
+    })
+    public ResponseEntity<List<SalasResponse>> buscarSalasPorHorario(@RequestParam @Valid LocalTime inicio, @RequestParam @Valid LocalTime fim) {
         try {
             List<SalasResponse> salas = salasServiceInterface.buscarSalasPorHorario(inicio, fim);
             return ResponseEntity.ok(salas);
@@ -63,8 +74,13 @@ public class SalasController {
     }
 
     @PutMapping("/alterar-disponibilidade/{id}")
-    public ResponseEntity<SalasResponse> alterarDisponibilidade(
-            @PathVariable UUID id, @RequestBody @Valid DisponibilidadeSalaEnum disponibilidadeSala) {
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Disponibilidade da sala alterada com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Valor inválido para alteração da disponibilidade"),
+            @ApiResponse(responseCode = "404", description = "Sala não encontrada para alteração"),
+            @ApiResponse(responseCode = "500", description = "Erro interno ao alterar disponibilidade")
+    })
+    public ResponseEntity<SalasResponse> alterarDisponibilidade(@PathVariable UUID id, @RequestBody @Valid DisponibilidadeSalaEnum disponibilidadeSala) {
         try {
             SalasResponse response = salasServiceInterface.alterarDisponibilidade(id, disponibilidadeSala);
             return ResponseEntity.ok(response);
@@ -74,6 +90,11 @@ public class SalasController {
     }
 
     @DeleteMapping("/deletar-sala/{id}")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Sala deletada com sucesso"),
+            @ApiResponse(responseCode = "404", description = "Sala não encontrada para exclusão"),
+            @ApiResponse(responseCode = "500", description = "Erro interno ao deletar sala")
+    })
     public ResponseEntity<String> deletarSala(@PathVariable UUID id) {
         try {
             salasServiceInterface.deletarSala(id);
