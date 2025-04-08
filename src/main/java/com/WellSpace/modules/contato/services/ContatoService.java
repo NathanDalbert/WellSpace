@@ -7,7 +7,6 @@ import com.WellSpace.modules.contato.services.mappers.ContatoMapper;
 import com.WellSpace.modules.contato.repository.ContatoRepository;
 import com.WellSpace.modules.contato.services.interfaces.ContatoServiceInterface;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,9 +17,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class ContatoService implements ContatoServiceInterface {
 
-
     private final ContatoRepository contatoRepository;
-
 
     private final ContatoMapper contatoMapper;
 
@@ -49,7 +46,7 @@ public class ContatoService implements ContatoServiceInterface {
 
     @Override
     public List<ContatoResponse> buscarContatosPorUsuario(UUID usuarioId) {
-        List<Contato> contatos = contatoRepository. findByUsuario_UsuarioId(usuarioId);
+        List<Contato> contatos = contatoRepository.findByUsuario_UsuarioId(usuarioId);
         return contatos.stream()
                 .map(contatoMapper::toResponse)
                 .collect(Collectors.toList());
