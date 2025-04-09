@@ -1,8 +1,8 @@
 package com.WellSpace.modules.salas.handler;
 
-import com.WellSpace.modules.salas.execepitons.SalaHJaExisteException;
-import com.WellSpace.modules.salas.execepitons.SalaNaoEncontradaException;
-import com.WellSpace.modules.salas.execepitons.TempoInvalidoException;
+import com.WellSpace.modules.salas.exceptions.SalaHJaExisteException;
+import com.WellSpace.modules.salas.exceptions.SalaNaoEncontradaException;
+import com.WellSpace.modules.salas.exceptions.TempoInvalidoException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;

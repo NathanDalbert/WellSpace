@@ -32,7 +32,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         if (token != null) {
             DecodedJWT auth = this.tokenService.validateToken(token);
 
-            // Verifique se a chave "UsuarioRole" é uma String
+
             String role = auth.getClaim("UsuarioRole").asString();
 
             if (role != null) {

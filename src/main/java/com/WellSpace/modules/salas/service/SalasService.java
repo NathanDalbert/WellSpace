@@ -7,9 +7,9 @@ import com.WellSpace.modules.salas.domain.Salas;
 import com.WellSpace.modules.salas.repository.SalasRepository;
 import com.WellSpace.modules.salas.service.Mapper.SalasMapper;
 import com.WellSpace.modules.salas.service.interfaces.SalasServiceInterface;
-import com.WellSpace.modules.salas.execepitons.SalaHJaExisteException;
-import com.WellSpace.modules.salas.execepitons.SalaNaoEncontradaException;
-import com.WellSpace.modules.salas.execepitons.TempoInvalidoException;
+import com.WellSpace.modules.salas.exceptions.SalaHJaExisteException;
+import com.WellSpace.modules.salas.exceptions.SalaNaoEncontradaException;
+import com.WellSpace.modules.salas.exceptions.TempoInvalidoException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

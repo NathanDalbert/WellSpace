@@ -21,8 +21,6 @@ public class Contato {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID contatoId;
 
-
-
     @Column(name = "contato", nullable = false)
     private String contato;
     @ManyToOne
