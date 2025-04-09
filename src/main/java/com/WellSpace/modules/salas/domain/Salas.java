@@ -1,5 +1,6 @@
 package com.WellSpace.modules.salas.domain;
 
+import com.WellSpace.modules.avaliacoes.domain.Avaliacao;
 import com.WellSpace.modules.salas.domain.ENUM.DisponibilidadeSalaEnum;
 import com.WellSpace.modules.salas_images.domain.SalasImages;
 
@@ -49,6 +50,9 @@ public class Salas {
 
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<SalasImages> imagens;
+
+    @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<Avaliacao> avaliacao;
 
     public Salas(String nomeSala, String descricao, String tamanho, Float precoHora, String disponibilidadeDiaSemana,
             LocalTime disponibilidadeInicio, LocalTime disponibilidadeFim,
