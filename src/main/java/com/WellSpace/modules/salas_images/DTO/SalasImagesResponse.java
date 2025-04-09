@@ -2,10 +2,5 @@ package com.WellSpace.modules.salas_images.DTO;
 
 import java.util.UUID;
 
-import org.springframework.web.multipart.MultipartFile;
-
-public record SalasImagesResponse(
-        UUID salasId,
-        MultipartFile imagem) {
-
+public record SalasImagesResponse(UUID id, String imagemUrl) {
 }
