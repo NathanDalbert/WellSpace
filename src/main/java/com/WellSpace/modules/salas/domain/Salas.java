@@ -1,7 +1,8 @@
 package com.WellSpace.modules.salas.domain;
 
-
 import com.WellSpace.modules.salas.domain.ENUM.DisponibilidadeSalaEnum;
+import com.WellSpace.modules.salas_images.domain.SalasImages;
+
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalTime;
+import java.util.List;
 import java.util.UUID;
 
 @Getter
@@ -45,8 +47,12 @@ public class Salas {
     @Enumerated(EnumType.STRING)
     private DisponibilidadeSalaEnum disponibilidadeSala;
 
+    @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private List<SalasImages> imagens;
 
-    public Salas(String nomeSala, String descricao, String tamanho, Float precoHora, String disponibilidadeDiaSemana, LocalTime disponibilidadeInicio, LocalTime disponibilidadeFim, DisponibilidadeSalaEnum disponibilidadeSala) {
+    public Salas(String nomeSala, String descricao, String tamanho, Float precoHora, String disponibilidadeDiaSemana,
+            LocalTime disponibilidadeInicio, LocalTime disponibilidadeFim,
+            DisponibilidadeSalaEnum disponibilidadeSala) {
         this.nomeSala = nomeSala;
         this.descricao = descricao;
         this.tamanho = tamanho;
@@ -57,8 +63,11 @@ public class Salas {
         this.disponibilidadeSala = disponibilidadeSala;
     }
 
-    public static Salas newSala(String nomeSala, String descricao, String tamanho, Float precoHora, String disponibilidadeDiaSemana, LocalTime disponibilidadeInicio, LocalTime disponibilidadeFim, DisponibilidadeSalaEnum disponibilidadeSala) {
-        return new Salas(nomeSala, descricao, tamanho, precoHora, disponibilidadeDiaSemana, disponibilidadeInicio, disponibilidadeFim, disponibilidadeSala);
+    public static Salas newSala(String nomeSala, String descricao, String tamanho, Float precoHora,
+            String disponibilidadeDiaSemana, LocalTime disponibilidadeInicio, LocalTime disponibilidadeFim,
+            DisponibilidadeSalaEnum disponibilidadeSala) {
+        return new Salas(nomeSala, descricao, tamanho, precoHora, disponibilidadeDiaSemana, disponibilidadeInicio,
+                disponibilidadeFim, disponibilidadeSala);
     }
 
 }
