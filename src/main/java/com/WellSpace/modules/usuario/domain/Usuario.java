@@ -1,6 +1,7 @@
 package com.WellSpace.modules.usuario.domain;
 
 import com.WellSpace.modules.contato.domain.Contato;
+import com.WellSpace.modules.salas.domain.Salas;
 import com.WellSpace.modules.usuario.domain.ENUM.UsuarioRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -45,10 +46,13 @@ public class Usuario  {
     private LocalDate dataNascimento;
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
-    private UsuarioRole usuarioRole;
+    private UsuarioRole usuarioRole = UsuarioRole.LOCADOR;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Contato> contatos;
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
+    List<Salas>   salas;
 
 
     public Usuario(String nome, String email, String senha, String fotoPerfil, Boolean integridade, LocalDate dataNascimento) {
@@ -63,6 +67,5 @@ public class Usuario  {
     public static Usuario newUsuario(String nome, String email, String senha, String fotoPerfil, Boolean integridade, LocalDate dataNascimento) {
         return new Usuario(nome, email, senha, fotoPerfil, integridade, dataNascimento);
     }
-
-
+    
 }

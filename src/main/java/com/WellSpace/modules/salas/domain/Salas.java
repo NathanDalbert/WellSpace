@@ -4,6 +4,7 @@ import com.WellSpace.modules.avaliacoes.domain.Avaliacao;
 import com.WellSpace.modules.salas.domain.ENUM.DisponibilidadeSalaEnum;
 import com.WellSpace.modules.salas_images.domain.SalasImages;
 
+import com.WellSpace.modules.usuario.domain.Usuario;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,13 +47,17 @@ public class Salas {
 
     @Column(name = "disponibilidade", nullable = false)
     @Enumerated(EnumType.STRING)
-    private DisponibilidadeSalaEnum disponibilidadeSala;
+    private DisponibilidadeSalaEnum disponibilidadeSala =DisponibilidadeSalaEnum.DISPONIVEL;
 
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<SalasImages> imagens;
 
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Avaliacao> avaliacao;
+
+    @ManyToOne
+    @JoinColumn(name = "usuarioId", nullable = false)
+    private Usuario usuario;
 
     public Salas(String nomeSala, String descricao, String tamanho, Float precoHora, String disponibilidadeDiaSemana,
             LocalTime disponibilidadeInicio, LocalTime disponibilidadeFim,

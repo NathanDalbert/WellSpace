@@ -4,6 +4,9 @@ import com.WellSpace.modules.salas.DTO.SalasRequest;
 import com.WellSpace.modules.salas.DTO.SalasResponse;
 import com.WellSpace.modules.salas.domain.ENUM.DisponibilidadeSalaEnum;
 import com.WellSpace.modules.salas.service.interfaces.SalasServiceInterface;
+import com.WellSpace.modules.salas.exceptions.SalaHJaExisteException;
+import com.WellSpace.modules.salas.exceptions.SalaNaoEncontradaException;
+import com.WellSpace.modules.salas.exceptions.TempoInvalidoException;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -23,21 +26,26 @@ public class SalasController {
     private final SalasServiceInterface salasServiceInterface;
 
     @PostMapping("/criar-sala")
-    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Sala criada com sucesso!"), @ApiResponse(responseCode = "400", description = "Erro na validação dos dados de sala"), @ApiResponse(responseCode = "500", description = "Erro interno do servidor")}
-
-
-    )
-    public ResponseEntity<SalasResponse> criarSala(@RequestBody @Valid SalasRequest salasRequest) {
+    @ApiResponses(value = {@ApiResponse(responseCode = "201", description = "Sala criada com sucesso!"),
+            @ApiResponse(responseCode = "400", description = "Erro na validação dos dados de sala"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")})
+    public ResponseEntity<SalasResponse> criarSala(@RequestBody @Valid SalasRequest salasRequest,
+                                                   @RequestHeader("usuarioId") UUID usuarioId) {
         try {
-            SalasResponse response = salasServiceInterface.criarSala(salasRequest);
+            SalasResponse response = salasServiceInterface.criarSala(salasRequest, usuarioId);
             return ResponseEntity.status(201).body(response);
-        } catch (Exception e) {
+        } catch (SalaHJaExisteException e) {
             return ResponseEntity.badRequest().body(null);
+        } catch (TempoInvalidoException e) {
+            return ResponseEntity.badRequest().body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
         }
     }
 
     @GetMapping("/listar-salas")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Lista de salas retornada com sucesso!"), @ApiResponse(responseCode = "500", description = "Erro interno do servidor")})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Lista de salas retornada com sucesso!"),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")})
     public ResponseEntity<List<SalasResponse>> listarSalas() {
         try {
             List<SalasResponse> salas = salasServiceInterface.listarSalas();
@@ -48,7 +56,9 @@ public class SalasController {
     }
 
     @GetMapping("/listar-salas/disponibilidade/{disponibilidadeSala}")
-    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Lista de salas por disponibilidade retornada com sucesso!"), @ApiResponse(responseCode = "400", description = "Valor inválido para disponibilidade de sala "),@ApiResponse(responseCode = "500", description = "Erro interno do servidor")})
+    @ApiResponses(value = {@ApiResponse(responseCode = "200", description = "Lista de salas por disponibilidade retornada com sucesso!"),
+            @ApiResponse(responseCode = "400", description = "Valor inválido para disponibilidade de sala "),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")})
     public ResponseEntity<List<SalasResponse>> listarSalasPorDisponibilidade(@PathVariable DisponibilidadeSalaEnum disponibilidadeSala) {
         try {
             List<SalasResponse> salas = salasServiceInterface.listarSalasPorDisponibilidade(disponibilidadeSala);
@@ -84,8 +94,10 @@ public class SalasController {
         try {
             SalasResponse response = salasServiceInterface.alterarDisponibilidade(id, disponibilidadeSala);
             return ResponseEntity.ok(response);
-        } catch (Exception e) {
+        } catch (SalaNaoEncontradaException e) {
             return ResponseEntity.status(404).body(null);
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body(null);
         }
     }
 
@@ -99,8 +111,10 @@ public class SalasController {
         try {
             salasServiceInterface.deletarSala(id);
             return ResponseEntity.status(200).body("Sala deletada com sucesso.");
-        } catch (Exception e) {
+        } catch (SalaNaoEncontradaException e) {
             return ResponseEntity.status(404).body("Sala não encontrada.");
+        } catch (Exception e) {
+            return ResponseEntity.status(500).body("Erro interno ao deletar sala.");
         }
     }
 }

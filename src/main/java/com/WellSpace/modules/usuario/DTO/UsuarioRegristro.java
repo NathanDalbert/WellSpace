@@ -37,7 +37,7 @@ public record UsuarioRegristro(
         LocalDate dataNascimento,
 
         @NotNull(message = "O papel de usuário é obrigatório")
-        @Schema(description = "Papel de usuário (role) do usuário", example = "LOCATARIO", required = true)
+        @Schema(description = "Papel de usuário (role) do usuário",required = true)
         UsuarioRole usuarioRole
 ) {
 }
