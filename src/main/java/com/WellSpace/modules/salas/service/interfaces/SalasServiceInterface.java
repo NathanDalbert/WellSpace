@@ -13,7 +13,7 @@ import java.util.UUID;
 @Component
 public interface SalasServiceInterface {
 
-    SalasResponse criarSala(SalasRequest salasRequest);
+    SalasResponse criarSala(SalasRequest salasRequest, UUID usuarioId);
 
     List<SalasResponse> listarSalas();
     List<SalasResponse> listarSalasPorDisponibilidade(DisponibilidadeSalaEnum disponibilidadeSala);

@@ -10,6 +10,9 @@ import com.WellSpace.modules.salas.service.interfaces.SalasServiceInterface;
 import com.WellSpace.modules.salas.exceptions.SalaHJaExisteException;
 import com.WellSpace.modules.salas.exceptions.SalaNaoEncontradaException;
 import com.WellSpace.modules.salas.exceptions.TempoInvalidoException;
+import com.WellSpace.modules.usuario.domain.ENUM.UsuarioRole;
+import com.WellSpace.modules.usuario.domain.Usuario;
+import com.WellSpace.modules.usuario.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -24,9 +27,10 @@ public class SalasService implements SalasServiceInterface {
 
     private final SalasRepository salasRepository;
     private final SalasMapper salasMapper;
+    private final UsuarioRepository usuarioRepository;
 
     @Override
-    public SalasResponse criarSala(SalasRequest salasRequest) {
+    public SalasResponse criarSala(SalasRequest salasRequest, UUID usuarioId) {
 
         if (salasRepository.existsByNomeSala(salasRequest.nomeSala())) {
             throw new SalaHJaExisteException("Já existe uma sala com o nome " + salasRequest.nomeSala());
@@ -37,9 +41,22 @@ public class SalasService implements SalasServiceInterface {
         }
 
 
+        Usuario usuario = usuarioRepository.findById(usuarioId)
+                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
+
+
         Salas sala = salasMapper.toEntity(salasRequest);
 
+
+        sala.setUsuario(usuario);
+
+
         Salas salaSalva = salasRepository.save(sala);
+
+
+        usuario.setUsuarioRole(UsuarioRole.LOCATARIO);
+        usuarioRepository.save(usuario);
+
 
         return salasMapper.toResponse(salaSalva);
     }
@@ -94,5 +111,13 @@ public class SalasService implements SalasServiceInterface {
 
     private boolean isWithinTimeRange(Salas sala, LocalTime inicio, LocalTime fim) {
         return !sala.getDisponibilidadeInicio().isBefore(inicio) && !sala.getDisponibilidadeFim().isAfter(fim);
+    }
+
+    // Novo método para buscar salas por usuarioId
+    public List<SalasResponse> listarSalasPorUsuario(UUID usuarioId) {
+        Optional<Salas> salas = salasRepository.findById(usuarioId);
+        return salas.stream()
+                .map(salasMapper::toResponse)
+                .toList();
     }
 }

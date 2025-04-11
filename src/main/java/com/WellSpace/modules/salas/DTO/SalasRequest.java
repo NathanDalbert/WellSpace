@@ -7,6 +7,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 
 import java.time.LocalTime;
+import java.util.UUID;
 
 public record SalasRequest(
 
@@ -39,7 +40,11 @@ public record SalasRequest(
         LocalTime disponibilidadeFim,
 
         @NotNull(message = "A disponibilidade da sala deve ser informada")
-        @Schema(example = "DISPONIVEL", description = "Estado da disponibilidade da sala")
-        DisponibilidadeSalaEnum disponibilidadeSala) {
+        @Schema(description = "Estado da disponibilidade da sala")
+        DisponibilidadeSalaEnum disponibilidadeSala,
+
+        @NotNull(message = "O ID do usuário deve ser informado")
+        @Schema(example = "123e4567-e89b-12d3-a456-426614174000", description = "ID do usuário que possui a sala")
+        UUID usuarioId) {
 
 }
