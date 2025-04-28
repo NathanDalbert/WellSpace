@@ -26,9 +26,9 @@ public record UsuarioRegristro(
         @Schema(description = "URL da foto de perfil do usuário", example = "https://example.com/foto.jpg")
         String fotoPerfil,
 
-        @NotNull(message = "A integridade é obrigatória")
+
         @Schema(description = "Estado de integridade do usuário", example = "true", required = true)
-        Boolean integridade,
+        Boolean integridade ,
 
         @NotNull(message = "A data de nascimento é obrigatória")
         @PastOrPresent(message = "A data de nascimento não pode ser no futuro")
@@ -36,8 +36,8 @@ public record UsuarioRegristro(
         @Schema(description = "Data de nascimento do usuário", example = "2000-05-15", required = true)
         LocalDate dataNascimento,
 
-        @NotNull(message = "O papel de usuário é obrigatório")
-        @Schema(description = "Papel de usuário (role) do usuário",required = true)
+
+        @Schema(description = "Papel de usuário (role) do usuário",required = true, example = "LOCADOR")
         UsuarioRole usuarioRole
 ) {
 }

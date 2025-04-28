@@ -44,7 +44,7 @@ public class AuthController {
     public ResponseEntity<String> loginUsuario(@RequestBody @Valid UsuarioLogin usuarioLogin) {
         try {
             String token = authService.login(usuarioLogin);
-            return ResponseEntity.ok("Login bem-sucedido! Token: " + token);
+            return ResponseEntity.ok( token);
         } catch (Exception e) {
             return ResponseEntity.status(401).body("Credenciais inválidas: " + e.getMessage());
         }

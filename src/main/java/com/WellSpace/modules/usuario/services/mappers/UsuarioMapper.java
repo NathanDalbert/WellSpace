@@ -19,7 +19,7 @@ public class UsuarioMapper {
                 usuarioRequest.senha(),
                 usuarioRequest.email(),
                 usuarioRequest.fotoPerfil(),
-                usuarioRequest.integridade(),
+                usuarioRequest.integridade() == false,
                 usuarioRequest.dataNascimento()
         );
     }

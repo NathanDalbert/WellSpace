@@ -10,9 +10,10 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
-import java.time.LocalDate;
+
 import java.time.ZoneOffset;
 import java.util.Date;
+import java.util.UUID;
 
 @Service
 public class TokenService {
@@ -25,8 +26,9 @@ public class TokenService {
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
             String role = user.getUsuarioRole().name();
-
             Date dataNascimento = Date.from(user.getDataNascimento().atStartOfDay(ZoneOffset.UTC).toInstant());
+
+            String tokenId = UUID.randomUUID().toString();
 
             return JWT.create()
                     .withIssuer("WellSpace")
@@ -37,7 +39,8 @@ public class TokenService {
                     .withClaim("integridade", user.getIntegridade())
                     .withClaim("dataNascimento", dataNascimento)
                     .withClaim("UsuarioRole", role)
-                    .withExpiresAt(getExpirationDate())
+                    .withClaim("tokenId", tokenId)
+                    .withExpiresAt(Date.from(Instant.now().plusSeconds(30 * 60)))
                     .sign(algorithm);
         } catch (Exception e) {
             throw new RuntimeException("Error generating token", e);
@@ -60,15 +63,9 @@ public class TokenService {
         }
     }
 
-    private Instant getExpirationDate() {
-        return LocalDate.now().plusDays(7).atStartOfDay(ZoneOffset.UTC).toInstant();
-    }
-
     public String decodeToken(String token) {
-        token = token.replace("Bearer", "");
-
+        token = token.replace("Bearer", "").trim();
         Algorithm algorithm = Algorithm.HMAC256(secret);
-
         try {
             return JWT.require(algorithm)
                     .build()
