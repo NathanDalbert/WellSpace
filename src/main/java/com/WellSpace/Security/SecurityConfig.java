@@ -34,12 +34,12 @@ public class SecurityConfig {
                 .cors().configurationSource(corsConfigurationSource())
                 .and()
                 .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()  // Permite acesso ao Swagger
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/usuario/**").hasAnyRole("LOCATARIO", "LOCADOR")
                         .requestMatchers("/contato/**").hasAnyRole("LOCATARIO", "LOCADOR")
-                        .requestMatchers("/api/localidades").hasRole("LOCATARIO")  // Permite acesso somente para LOCATARIO
-                        .anyRequest().authenticated()  // Requer autenticação para as demais rotas
+                        .requestMatchers("/api/localidades").hasRole("LOCATARIO")
+                        .anyRequest().authenticated()
                 )
                 .addFilterBefore(securityFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
@@ -55,18 +55,16 @@ public class SecurityConfig {
         corsConfiguration.setAllowCredentials(true);  // Permite enviar cookies e credenciais
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfiguration);  // Aplica a configuração CORS a todas as rotas
+        source.registerCorsConfiguration("/**", corsConfiguration);
 
         return source;
     }
 
-    // Bean para AuthenticationManager
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    // Bean para PasswordEncoder=[aq
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();

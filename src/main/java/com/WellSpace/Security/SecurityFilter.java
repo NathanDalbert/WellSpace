@@ -1,4 +1,5 @@
 package com.WellSpace.Security;
+
 import java.io.IOException;
 import java.util.List;
 
@@ -16,7 +17,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 
-
 @Component
 @RequiredArgsConstructor
 public class SecurityFilter extends OncePerRequestFilter {
@@ -32,23 +32,23 @@ public class SecurityFilter extends OncePerRequestFilter {
         if (token != null) {
             DecodedJWT auth = this.tokenService.validateToken(token);
 
-
             String role = auth.getClaim("UsuarioRole").asString();
+            String usuarioId = auth.getClaim("usuarioId").asString();  // PEGA O ID DO USUÁRIO
 
-            if (role != null) {
-
+            if (role != null && usuarioId != null) {
                 var grants = List.of(new SimpleGrantedAuthority("ROLE_" + role));
 
-                request.setAttribute("usuarioId", auth.getSubject());
 
-                var authentication = new UsernamePasswordAuthenticationToken(auth.getSubject(), null, grants);
+                var authentication = new UsernamePasswordAuthenticationToken(usuarioId, null, grants);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+
+
+                request.setAttribute("usuarioId", usuarioId);
             }
         }
 
         filterChain.doFilter(request, response);
     }
-
 
     private String recoverToken(HttpServletRequest request) {
         var authHeader = request.getHeader("Authorization");
@@ -57,5 +57,4 @@ public class SecurityFilter extends OncePerRequestFilter {
         }
         return authHeader.replace("Bearer", "").trim();
     }
-
 }
