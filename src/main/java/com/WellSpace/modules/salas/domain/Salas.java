@@ -3,7 +3,6 @@ package com.WellSpace.modules.salas.domain;
 import com.WellSpace.modules.avaliacoes.domain.Avaliacao;
 import com.WellSpace.modules.salas.domain.ENUM.DisponibilidadeSalaEnum;
 import com.WellSpace.modules.salas_images.domain.SalasImages;
-
 import com.WellSpace.modules.usuario.domain.Usuario;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -19,23 +18,27 @@ import java.util.UUID;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "salas")
+@Entity
 @Table(name = "salas")
 public class Salas {
 
     @Id
-    @Column(name = "salas_id")
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "salas_id", updatable = false, nullable = false)
     private UUID salasId;
 
     @Column(name = "nome_sala", nullable = false)
     private String nomeSala;
+
     @Column(name = "descricao", nullable = false, columnDefinition = "TEXT")
     private String descricao;
+
     @Column(name = "tamanho", nullable = false)
     private String tamanho;
+
     @Column(name = "preco_hora", nullable = false)
     private Float precoHora;
+
     @Column(name = "disponibilidade_dia_semana", nullable = false)
     private String disponibilidadeDiaSemana;
 
@@ -47,7 +50,12 @@ public class Salas {
 
     @Column(name = "disponibilidade", nullable = false)
     @Enumerated(EnumType.STRING)
-    private DisponibilidadeSalaEnum disponibilidadeSala =DisponibilidadeSalaEnum.DISPONIVEL;
+    private DisponibilidadeSalaEnum disponibilidadeSala = DisponibilidadeSalaEnum.DISPONIVEL;
+
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<SalasImages> imagens;
@@ -55,13 +63,10 @@ public class Salas {
     @OneToMany(mappedBy = "sala", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private List<Avaliacao> avaliacao;
 
-    @ManyToOne
-    @JoinColumn(name = "usuarioId", nullable = false)
-    private Usuario usuario;
 
-    public Salas(String nomeSala, String descricao, String tamanho, Float precoHora, String disponibilidadeDiaSemana,
-            LocalTime disponibilidadeInicio, LocalTime disponibilidadeFim,
-            DisponibilidadeSalaEnum disponibilidadeSala) {
+    private Salas(String nomeSala, String descricao, String tamanho, Float precoHora,
+                 String disponibilidadeDiaSemana, LocalTime disponibilidadeInicio,
+                 LocalTime disponibilidadeFim, DisponibilidadeSalaEnum disponibilidadeSala) {
         this.nomeSala = nomeSala;
         this.descricao = descricao;
         this.tamanho = tamanho;
@@ -73,10 +78,10 @@ public class Salas {
     }
 
     public static Salas newSala(String nomeSala, String descricao, String tamanho, Float precoHora,
-            String disponibilidadeDiaSemana, LocalTime disponibilidadeInicio, LocalTime disponibilidadeFim,
-            DisponibilidadeSalaEnum disponibilidadeSala) {
-        return new Salas(nomeSala, descricao, tamanho, precoHora, disponibilidadeDiaSemana, disponibilidadeInicio,
+                                String disponibilidadeDiaSemana, LocalTime disponibilidadeInicio,
+                                LocalTime disponibilidadeFim, DisponibilidadeSalaEnum disponibilidadeSala) {
+        return new Salas(nomeSala, descricao, tamanho, precoHora,
+                disponibilidadeDiaSemana, disponibilidadeInicio,
                 disponibilidadeFim, disponibilidadeSala);
     }
-
 }
