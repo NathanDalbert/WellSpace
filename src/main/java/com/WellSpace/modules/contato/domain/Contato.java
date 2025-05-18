@@ -14,17 +14,19 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "contato")
-@Table(name = "contatos")
+@Table(name = "contato")
 public class Contato {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "contato_id", updatable = false, nullable = false)
     private UUID contatoId;
 
     @Column(name = "contato", nullable = false)
     private String contato;
-    @ManyToOne
-    @JoinColumn(name = "usuarioId", nullable = false)
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_usuario")
     private Usuario usuario;
 
 
