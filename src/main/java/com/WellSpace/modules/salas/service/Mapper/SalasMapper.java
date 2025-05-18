@@ -3,54 +3,38 @@ package com.WellSpace.modules.salas.service.Mapper;
 import com.WellSpace.modules.salas.DTO.SalasRequest;
 import com.WellSpace.modules.salas.DTO.SalasResponse;
 import com.WellSpace.modules.salas.domain.Salas;
-import com.WellSpace.modules.usuario.domain.Usuario;
-import com.WellSpace.modules.usuario.repository.UsuarioRepository; // Supondo que você tenha um repositório de Usuario
-import com.WellSpace.modules.salas.domain.ENUM.DisponibilidadeSalaEnum;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
 public class SalasMapper {
 
-    private final UsuarioRepository usuarioRepository;
 
-
-    public Salas toEntity(@Valid SalasRequest salasRequest) {
-
-        Usuario usuario = usuarioRepository.findById(salasRequest.usuarioId())
-                .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-
-        Salas sala = new Salas(
-                salasRequest.nomeSala(),
-                salasRequest.descricao(),
-                salasRequest.tamanho(),
-                salasRequest.precoHora(),
-                salasRequest.disponibilidadeDiaSemana(),
-                salasRequest.disponibilidadeInicio(),
-                salasRequest.disponibilidadeFim(),
-                salasRequest.disponibilidadeSala()
+    public Salas toEntity(@Valid SalasRequest req) {
+        return Salas.newSala(
+                req.nomeSala(),
+                req.descricao(),
+                req.tamanho(),
+                req.precoHora(),
+                req.disponibilidadeDiaSemana(),
+                req.disponibilidadeInicio(),
+                req.disponibilidadeFim(),
+                req.disponibilidadeSala()
         );
-
-
-        sala.setUsuario(usuario);
-
-        return sala;
     }
 
-    public SalasResponse toResponse(Salas salas) {
+    public SalasResponse toResponse(Salas sala) {
         return new SalasResponse(
-                salas.getSalasId(),
-                salas.getNomeSala(),
-                salas.getDescricao(),
-                salas.getTamanho(),
-                salas.getPrecoHora(),
-                salas.getDisponibilidadeDiaSemana(),
-                salas.getDisponibilidadeInicio(),
-                salas.getDisponibilidadeFim(),
-                salas.getDisponibilidadeSala(),
-                salas.getUsuario().getUsuarioId()
+                sala.getSalasId(),
+                sala.getNomeSala(),
+                sala.getDescricao(),
+                sala.getTamanho(),
+                sala.getPrecoHora(),
+                sala.getDisponibilidadeDiaSemana(),
+                sala.getDisponibilidadeInicio(),
+                sala.getDisponibilidadeFim(),
+                sala.getDisponibilidadeSala(),
+                sala.getUsuario().getUsuarioId()
         );
     }
 }
