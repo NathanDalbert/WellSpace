@@ -10,8 +10,8 @@ import com.WellSpace.modules.salas.service.interfaces.SalasServiceInterface;
 import com.WellSpace.modules.salas.exceptions.SalaHJaExisteException;
 import com.WellSpace.modules.salas.exceptions.SalaNaoEncontradaException;
 import com.WellSpace.modules.salas.exceptions.TempoInvalidoException;
-import com.WellSpace.modules.usuario.domain.ENUM.UsuarioRole;
 import com.WellSpace.modules.usuario.domain.Usuario;
+import com.WellSpace.modules.usuario.domain.ENUM.UsuarioRole;
 import com.WellSpace.modules.usuario.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,33 +30,41 @@ public class SalasService implements SalasServiceInterface {
     private final UsuarioRepository usuarioRepository;
 
     @Override
-    public SalasResponse criarSala(SalasRequest salasRequest, UUID usuarioId) {
+    public SalasResponse criarSala(SalasRequest req, UUID usuarioId) {
 
-        if (salasRepository.existsByNomeSala(salasRequest.nomeSala())) {
-            throw new SalaHJaExisteException("Já existe uma sala com o nome " + salasRequest.nomeSala());
+
+        if (req == null) {
+            throw new IllegalArgumentException("Requisição não pode ser nula.");
         }
-
-        if (salasRequest.disponibilidadeInicio().isAfter(salasRequest.disponibilidadeFim())) {
+        if (req.nomeSala() == null || req.nomeSala().isBlank()) {
+            throw new IllegalArgumentException("Nome da sala não pode ser nulo ou vazio.");
+        }
+        if (salasRepository.existsByNomeSala(req.nomeSala())) {
+            throw new SalaHJaExisteException("Já existe uma sala com o nome " + req.nomeSala());
+        }
+        if (req.disponibilidadeInicio() == null || req.disponibilidadeFim() == null) {
+            throw new IllegalArgumentException("Horários de início e fim não podem ser nulos.");
+        }
+        if (req.disponibilidadeInicio().isAfter(req.disponibilidadeFim())) {
             throw new TempoInvalidoException("O horário de início não pode ser depois do horário de fim.");
         }
-
+        if (usuarioId == null) {
+            throw new IllegalArgumentException("O ID do usuário não pode ser nulo.");
+        }
 
         Usuario usuario = usuarioRepository.findById(usuarioId)
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
 
 
-        Salas sala = salasMapper.toEntity(salasRequest);
-
+        Salas sala = salasMapper.toEntity(req);
 
         sala.setUsuario(usuario);
-
 
         Salas salaSalva = salasRepository.save(sala);
 
 
-        usuario.setUsuarioRole(UsuarioRole.LOCATARIO);
-        usuarioRepository.save(usuario);
-
+         usuario.setUsuarioRole(UsuarioRole.LOCATARIO);
+         usuarioRepository.save(usuario);
 
         return salasMapper.toResponse(salaSalva);
     }
@@ -71,6 +79,9 @@ public class SalasService implements SalasServiceInterface {
 
     @Override
     public List<SalasResponse> listarSalasPorDisponibilidade(DisponibilidadeSalaEnum disponibilidadeSala) {
+        if (disponibilidadeSala == null) {
+            throw new IllegalArgumentException("Disponibilidade não pode ser nula.");
+        }
         List<Salas> salas = salasRepository.findByDisponibilidadeSala(disponibilidadeSala);
         return salas.stream()
                 .map(salasMapper::toResponse)
@@ -79,6 +90,9 @@ public class SalasService implements SalasServiceInterface {
 
     @Override
     public List<SalasResponse> buscarSalasPorHorario(LocalTime inicio, LocalTime fim) {
+        if (inicio == null || fim == null) {
+            throw new IllegalArgumentException("Horários de início e fim não podem ser nulos.");
+        }
         List<Salas> salas = salasRepository.findAll();
         return salas.stream()
                 .filter(sala -> isWithinTimeRange(sala, inicio, fim))
@@ -88,7 +102,9 @@ public class SalasService implements SalasServiceInterface {
 
     @Override
     public void deletarSala(UUID id) {
-
+        if (id == null) {
+            throw new IllegalArgumentException("ID da sala não pode ser nulo.");
+        }
         if (!salasRepository.existsById(id)) {
             throw new SalaNaoEncontradaException("Sala com ID " + id + " não encontrada para exclusão.");
         }
@@ -97,6 +113,12 @@ public class SalasService implements SalasServiceInterface {
 
     @Override
     public SalasResponse alterarDisponibilidade(UUID id, DisponibilidadeSalaEnum disponibilidadeSala) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID da sala não pode ser nulo.");
+        }
+        if (disponibilidadeSala == null) {
+            throw new IllegalArgumentException("Disponibilidade da sala não pode ser nula.");
+        }
         Optional<Salas> salaOptional = salasRepository.findById(id);
         if (salaOptional.isEmpty()) {
             throw new SalaNaoEncontradaException("Sala com ID " + id + " não encontrada para alteração de disponibilidade.");
@@ -115,8 +137,12 @@ public class SalasService implements SalasServiceInterface {
 
     // Novo método para buscar salas por usuarioId
     public List<SalasResponse> listarSalasPorUsuario(UUID usuarioId) {
-        Optional<Salas> salas = salasRepository.findById(usuarioId);
+        if (usuarioId == null) {
+            throw new IllegalArgumentException("ID do usuário não pode ser nulo.");
+        }
+        List<Salas> salas = salasRepository.findAll(); // Ajuste se precisar de filtro por usuário
         return salas.stream()
+                .filter(s -> s.getUsuario().getUsuarioId().equals(usuarioId))
                 .map(salasMapper::toResponse)
                 .toList();
     }
