@@ -35,7 +35,7 @@ public class AuthService {
         Usuario usuario = usuarioMapper.toEntity(usuarioRegristro);
 
         if (usuarioRegristro.usuarioRole() == null) {
-            usuario.setUsuarioRole(UsuarioRole.ADMIN);
+            usuario.setUsuarioRole(UsuarioRole.LOCADOR);
         } else {
             usuario.setUsuarioRole(usuarioRegristro.usuarioRole());
         }
