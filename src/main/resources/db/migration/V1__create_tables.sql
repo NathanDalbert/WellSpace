@@ -1,5 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
+
 CREATE TABLE usuario (
     id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
     nome VARCHAR(255) NOT NULL,
@@ -11,8 +12,8 @@ CREATE TABLE usuario (
 );
 
 CREATE TABLE contato (
-    id_contato UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    telefone VARCHAR(255) NOT NULL,
+    contato_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    contato VARCHAR(255) NOT NULL,
     id_usuario UUID,
     CONSTRAINT fk_contato_usuario FOREIGN KEY (id_usuario) REFERENCES usuario(id) ON DELETE CASCADE
 );
@@ -29,13 +30,16 @@ CREATE TABLE contato (
 
 CREATE TABLE salas (
     salas_id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    localidade_id UUID,
+    nome_sala VARCHAR(255) NOT NULL,
     descricao TEXT NOT NULL,
     tamanho VARCHAR(255) NOT NULL,
-    preco_por_hora DECIMAL(10, 2),
-    tempo_inicio_disponivel TIME,
-    tempo_fim_disponivel TIME,
-    CONSTRAINT fk_localidade FOREIGN KEY (localidade_id) REFERENCES localidades(localidade_id) ON DELETE CASCADE
+    preco_hora FLOAT NOT NULL,
+    disponibilidade_dia_semana VARCHAR(255) NOT NULL,
+    disponibilidade_inicio TIME NOT NULL,
+    disponibilidade_fim TIME NOT NULL,
+    disponibilidade VARCHAR(20) NOT NULL,
+    usuario_id UUID NOT NULL,
+    CONSTRAINT fk_usuario FOREIGN KEY (usuario_id) REFERENCES usuario(id) ON DELETE CASCADE
 );
 
 CREATE TABLE sala_imagens (

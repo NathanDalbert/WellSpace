@@ -1,2 +1,3 @@
 ALTER TABLE contato
-MODIFY COLLUMN telefone char(11) NOT NULL,
+  ALTER COLUMN contato TYPE CHAR(11),
+  ALTER COLUMN contato SET NOT NULL;
