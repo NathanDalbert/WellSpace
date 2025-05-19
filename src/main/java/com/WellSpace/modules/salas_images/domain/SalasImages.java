@@ -25,7 +25,7 @@ import lombok.Setter;
 
 public class SalasImages {
     @Id
-    @Column(name = "salas_images_id")
+    @Column(name = "ID")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID salasImagesId;
 
@@ -33,7 +33,7 @@ public class SalasImages {
     private String imagem;
 
     @ManyToOne
-    @JoinColumn(name = "salas_id")
+    @JoinColumn(name = "sala_id")
     private Salas sala;
 
 }
