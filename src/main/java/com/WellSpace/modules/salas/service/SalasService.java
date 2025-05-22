@@ -131,6 +131,16 @@ public class SalasService implements SalasServiceInterface {
         return salasMapper.toResponse(salaAtualizada);
     }
 
+    @Override
+    public SalasResponse buscarSalaPorId(UUID id) {
+        if (id == null) {
+            throw new IllegalArgumentException("ID da sala não pode ser nulo.");
+        }
+        Salas sala = salasRepository.findById(id)
+                .orElseThrow(() -> new SalaNaoEncontradaException("Sala com ID " + id + " não encontrada."));
+        return salasMapper.toResponse(sala);
+    }
+
     private boolean isWithinTimeRange(Salas sala, LocalTime inicio, LocalTime fim) {
         return !sala.getDisponibilidadeInicio().isBefore(inicio) && !sala.getDisponibilidadeFim().isAfter(fim);
     }
