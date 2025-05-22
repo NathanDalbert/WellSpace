@@ -20,4 +20,5 @@ public interface SalasServiceInterface {
     List<SalasResponse> buscarSalasPorHorario(LocalTime inicio, LocalTime fim);
     void deletarSala(UUID id);
     SalasResponse alterarDisponibilidade(UUID id, DisponibilidadeSalaEnum disponibilidadeSala);
+    SalasResponse buscarSalaPorId(UUID id);
 }
