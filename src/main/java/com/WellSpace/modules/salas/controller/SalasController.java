@@ -7,6 +7,7 @@ import com.WellSpace.modules.salas.service.interfaces.SalasServiceInterface;
 import com.WellSpace.modules.salas.exceptions.SalaHJaExisteException;
 import com.WellSpace.modules.salas.exceptions.SalaNaoEncontradaException;
 import com.WellSpace.modules.salas.exceptions.TempoInvalidoException;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
@@ -63,6 +64,31 @@ public class SalasController {
         } catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Erro ao listar salas: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/buscar-sala/{id}") // <-- NEW ENDPOINT
+    @Operation(summary = "Busca uma sala específica pelo ID")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Sala encontrada com sucesso!"),
+            @ApiResponse(responseCode = "400", description = "ID da sala inválido."),
+            @ApiResponse(responseCode = "404", description = "Sala não encontrada."),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor")
+    })
+    public ResponseEntity<?> buscarSalaPorId(@PathVariable UUID id) {
+        try {
+            if (id == null) {
+                return ResponseEntity.badRequest().body("ID da sala não pode ser nulo.");
+            }
+            SalasResponse sala = salasServiceInterface.buscarSalaPorId(id);
+            return ResponseEntity.ok(sala);
+        } catch (SalaNaoEncontradaException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Erro ao buscar sala por ID: " + e.getMessage());
         }
     }
 
