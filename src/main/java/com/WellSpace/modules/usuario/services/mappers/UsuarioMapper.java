@@ -13,13 +13,13 @@ import java.util.Optional;
 public class UsuarioMapper {
 
 
-    public Usuario toEntity(@Valid UsuarioRegristro usuarioRequest) {
+    public Usuario toEntity(@Valid UsuarioRegristro usuarioRequest, String fotoUrl) {
         return Usuario.newUsuario(
                 usuarioRequest.nome(),
-                usuarioRequest.senha(),
                 usuarioRequest.email(),
-                usuarioRequest.fotoPerfil(),
-                usuarioRequest.integridade() == false,
+                usuarioRequest.senha(),
+                fotoUrl,
+                usuarioRequest.integridade(),
                 usuarioRequest.dataNascimento()
         );
     }

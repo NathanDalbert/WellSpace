@@ -3,6 +3,7 @@ package com.WellSpace.modules.usuario.DTO;
 import com.WellSpace.modules.usuario.domain.ENUM.UsuarioRole;
 import com.WellSpace.utils.validations.MaiorDe18;
 import jakarta.validation.constraints.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -19,7 +20,7 @@ public record UsuarioRequest(
         @Size(min = 8, message = "A senha deve ter no mínimo 8 caracteres")
         String senha,
 
-        String fotoPerfil,
+        MultipartFile fotoPerfil,
 
         @NotNull(message = "A integridade é obrigatória")
         Boolean integridade,

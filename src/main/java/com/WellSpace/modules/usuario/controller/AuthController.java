@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,8 +26,10 @@ public class AuthController {
             @ApiResponse(responseCode = "201", description = "Usuário registrado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Erro na validação dos dados")
     })
-    @PostMapping("/registrar")
-    public ResponseEntity<String> registrarUsuario(@RequestBody @Valid UsuarioRegristro usuarioRegristro) {
+
+
+    @PostMapping(value = "/registrar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> registrarUsuario(@ModelAttribute @Valid UsuarioRegristro usuarioRegristro) {
         try {
             String token = authService.registrarUsuario(usuarioRegristro);
             return ResponseEntity.ok("Usuário registrado com sucesso. Token: " + token);

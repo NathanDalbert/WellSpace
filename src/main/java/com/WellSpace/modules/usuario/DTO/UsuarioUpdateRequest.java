@@ -2,6 +2,7 @@ package com.WellSpace.modules.usuario.DTO;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.UUID;
 
@@ -15,7 +16,7 @@ public record UsuarioUpdateRequest(
         @Size(min = 8, message = "A senha deve ter no mínimo 8 caracteres")
         String senha,
 
-        String fotoPerfil
+        MultipartFile fotoPerfil
 ) {
 
 }

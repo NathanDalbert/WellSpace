@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
@@ -52,7 +53,10 @@ public class UsuarioController {
             @ApiResponse(responseCode = "200", description = "Usuário atualizado com sucesso"),
             @ApiResponse(responseCode = "404", description = "Usuário não encontrado")
     })
-    public ResponseEntity<UsuarioResponse> atualizarUsuario(@RequestBody @Valid UsuarioUpdateRequest usuarioUpdateRequest) {
+    public ResponseEntity<UsuarioResponse> atualizarUsuario(
+            @PathVariable UUID id,
+            @RequestPart(value = "usuarioUpdateRequest", required = false) @Valid UsuarioUpdateRequest usuarioUpdateRequest,
+            @RequestPart(value = "fotoPerfil", required = false) MultipartFile fotoPerfil) {
         try {
             UUID usuarioId = usuarioUpdateRequest.usuarioId();
             UsuarioResponse usuarioResponse = usuarioService.atualizarUsuario(usuarioId, usuarioUpdateRequest);

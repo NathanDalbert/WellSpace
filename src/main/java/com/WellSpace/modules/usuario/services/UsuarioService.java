@@ -15,6 +15,11 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import java.io.IOException;
+import java.util.Map;
+
 
 @Service
 @Transactional
@@ -23,6 +28,8 @@ public class UsuarioService implements UsuarioServiceInterface {
 
     private final UsuarioRepository usuarioRepository;
     private final UsuarioMapper usuarioMapper;
+    private final Cloudinary cloudinary;
+
 
     @Override
     public UsuarioResponse buscarUsuarioPorId(UUID usuarioId) {
@@ -39,11 +46,20 @@ public class UsuarioService implements UsuarioServiceInterface {
         if (usuarioUpdateRequest.nome() != null) {
             usuario.setNome(usuarioUpdateRequest.nome());
         }
+
         if (usuarioUpdateRequest.senha() != null) {
             usuario.setSenha(usuarioUpdateRequest.senha());
         }
-        if (usuarioUpdateRequest.fotoPerfil() != null) {
-            usuario.setFotoPerfil(usuarioUpdateRequest.fotoPerfil());
+
+        if (usuarioUpdateRequest.fotoPerfil() != null && !usuarioUpdateRequest.fotoPerfil().isEmpty()) {
+            try {
+                Map uploadResult = cloudinary.uploader().upload(
+                        usuarioUpdateRequest.fotoPerfil().getBytes(), ObjectUtils.emptyMap());
+                String fotoUrl = uploadResult.get("secure_url").toString();
+                usuario.setFotoPerfil(fotoUrl);
+            } catch (IOException e) {
+                throw new RuntimeException("Erro ao fazer upload da nova foto de perfil", e);
+            }
         }
 
         Usuario usuarioAtualizado = usuarioRepository.save(usuario);
