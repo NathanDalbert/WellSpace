@@ -1,23 +1,34 @@
 package com.WellSpace.modules.usuario.controller;
 
+import com.WellSpace.modules.usuario.DTO.ForgotPasswordRequest;
+import com.WellSpace.modules.usuario.DTO.ResetPasswordRequest;
 import com.WellSpace.modules.usuario.DTO.UsuarioLogin;
 import com.WellSpace.modules.usuario.DTO.UsuarioRegristro;
+import com.WellSpace.modules.usuario.exceptions.InvalidTokenException;
+import com.WellSpace.modules.usuario.exceptions.TokenExpiredException;
 import com.WellSpace.modules.usuario.services.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
-import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
     private final AuthService authService;
 
@@ -26,30 +37,40 @@ public class AuthController {
             @ApiResponse(responseCode = "201", description = "Usuário registrado com sucesso"),
             @ApiResponse(responseCode = "400", description = "Erro na validação dos dados")
     })
-
-
     @PostMapping(value = "/registrar", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> registrarUsuario(@ModelAttribute @Valid UsuarioRegristro usuarioRegristro) {
+    public ResponseEntity<String> registrar(@ModelAttribute @Valid UsuarioRegristro usuarioRegristro) {
+        String response = authService.registrarUsuario(usuarioRegristro);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<String> login(@RequestBody @Valid UsuarioLogin usuarioLogin) {
+        String token = authService.login(usuarioLogin);
+        return ResponseEntity.ok(token);
+    }
+
+    @PostMapping("/forgot-password")
+    public ResponseEntity<String> handleForgotPassword(@RequestBody @Valid ForgotPasswordRequest forgotPasswordRequest) {
         try {
-            String token = authService.registrarUsuario(usuarioRegristro);
-            return ResponseEntity.ok("Usuário registrado com sucesso. Token: " + token);
+            authService.initiatePasswordResetProcess(forgotPasswordRequest.email());
+            return ResponseEntity.ok("Se o seu e-mail estiver cadastrado em nosso sistema, você receberá um link para redefinir sua senha.");
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Erro ao registrar o usuário: " + e.getMessage());
+            logger.error("Erro inesperado durante a solicitação de redefinição de senha para o email [PROTEGIDO]: ", e);
+            return ResponseEntity.ok("Se o seu e-mail estiver cadastrado em nosso sistema, você receberá um link para redefinir sua senha.");
         }
     }
 
-    @Operation(summary = "Login do usuário", description = "Realiza o login do usuário e retorna um token de autenticação.")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Login bem-sucedido"),
-            @ApiResponse(responseCode = "401", description = "Credenciais inválidas")
-    })
-    @PostMapping("/login")
-    public ResponseEntity<String> loginUsuario(@RequestBody @Valid UsuarioLogin usuarioLogin) {
+    @PostMapping("/reset-password")
+    public ResponseEntity<String> handleResetPassword(@RequestBody @Valid ResetPasswordRequest resetPasswordRequest) {
         try {
-            String token = authService.login(usuarioLogin);
-            return ResponseEntity.ok( token);
+            authService.finalizePasswordReset(resetPasswordRequest.token(), resetPasswordRequest.newPassword());
+            return ResponseEntity.ok("Sua senha foi redefinida com sucesso.");
+        } catch (InvalidTokenException | TokenExpiredException e) {
+            logger.warn("Tentativa de redefinição de senha falhou: {}", e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            return ResponseEntity.status(401).body("Credenciais inválidas: " + e.getMessage());
+            logger.error("Erro inesperado ao tentar redefinir a senha com o token [PROTEGIDO]: ", e);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro ao tentar redefinir sua senha. Por favor, tente novamente mais tarde.");
         }
     }
 }
