@@ -9,10 +9,7 @@ import com.WellSpace.modules.usuario.domain.ENUM.UsuarioRole;
 import com.WellSpace.modules.usuario.exceptions.*;
 import com.WellSpace.modules.usuario.repository.PasswordResetTokenRepository;
 import com.WellSpace.modules.usuario.repository.UsuarioRepository;
-import com.WellSpace.modules.usuario.services.EmailService;
 import com.WellSpace.modules.usuario.services.mappers.UsuarioMapper;
-
-
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import jakarta.transaction.Transactional;
@@ -46,13 +43,12 @@ public class AuthService {
 
         String fotoUrl;
         try {
-
             Map uploadResult = cloudinary.uploader().upload(usuarioRegristro.fotoPerfil().getBytes(), ObjectUtils.emptyMap());
             fotoUrl = uploadResult.get("secure_url").toString();
         } catch (IOException e) {
             throw new RuntimeException("Erro ao fazer upload da imagem de perfil", e);
         }
-        // Assumindo que seu UsuarioMapper.toEntity aceita UsuarioRegristro e fotoUrl
+
         Usuario usuario = usuarioMapper.toEntity(usuarioRegristro, fotoUrl);
         usuario.setSenha(passwordEncoder.encode(usuarioRegristro.senha()));
 
@@ -82,10 +78,17 @@ public class AuthService {
 
         if (userOptional.isPresent()) {
             Usuario usuario = userOptional.get();
-            passwordResetTokenRepository.deleteByUsuario(usuario);
+
+            Optional<PasswordResetToken> existingTokenOpt = passwordResetTokenRepository.findByUsuario(usuario);
+            existingTokenOpt.ifPresent(token -> {
+                passwordResetTokenRepository.delete(token);
+                passwordResetTokenRepository.flush();
+            });
+
             String tokenValue = UUID.randomUUID().toString();
-            PasswordResetToken passwordResetToken = new PasswordResetToken(tokenValue, usuario);
-            passwordResetTokenRepository.save(passwordResetToken);
+            PasswordResetToken newPasswordResetToken = new PasswordResetToken(tokenValue, usuario);
+            passwordResetTokenRepository.save(newPasswordResetToken);
+
             emailService.sendPasswordResetEmail(usuario.getEmail(), tokenValue);
         }
     }

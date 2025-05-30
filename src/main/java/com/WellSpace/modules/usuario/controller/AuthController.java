@@ -55,12 +55,14 @@ public class AuthController {
             authService.initiatePasswordResetProcess(forgotPasswordRequest.email());
             return ResponseEntity.ok("Se o seu e-mail estiver cadastrado em nosso sistema, você receberá um link para redefinir sua senha.");
         } catch (Exception e) {
-            logger.error("Erro inesperado durante a solicitação de redefinição de senha para o email [PROTEGIDO]: ", e);
+            String userEmailForLog = (forgotPasswordRequest != null && forgotPasswordRequest.email() != null)
+                    ? forgotPasswordRequest.email() : "Email não disponível na requisição";
+            logger.error("Erro inesperado durante a solicitação de redefinição de senha para o email [{}]: ", userEmailForLog, e);
             return ResponseEntity.ok("Se o seu e-mail estiver cadastrado em nosso sistema, você receberá um link para redefinir sua senha.");
         }
     }
 
-    @PostMapping("/reset-password")
+    @PostMapping("/reset-password") // Endpoint ajustado de "/resetar-senha" para "/reset-password"
     public ResponseEntity<String> handleResetPassword(@RequestBody @Valid ResetPasswordRequest resetPasswordRequest) {
         try {
             authService.finalizePasswordReset(resetPasswordRequest.token(), resetPasswordRequest.newPassword());
@@ -69,7 +71,9 @@ public class AuthController {
             logger.warn("Tentativa de redefinição de senha falhou: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
         } catch (Exception e) {
-            logger.error("Erro inesperado ao tentar redefinir a senha com o token [PROTEGIDO]: ", e);
+            // Para o token, é bom não logar o valor completo diretamente por segurança.
+            // Pode-se logar um hash, ou apenas uma indicação de que um token foi usado.
+            logger.error("Erro inesperado ao tentar redefinir a senha com o token [PROTEGIDO/PRESENTE]: ", e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Ocorreu um erro ao tentar redefinir sua senha. Por favor, tente novamente mais tarde.");
         }
     }
