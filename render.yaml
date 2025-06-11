@@ -1,0 +1,37 @@
+services:
+  - type: pserv
+    name: wellspace-postgres
+    dockerImage: postgres
+    plan: free
+    envVars:
+      - key: POSTGRES_DB
+        value: wellspace
+      - key: POSTGRES_USER
+        value: wellspace_user
+    disk:
+      name: postgres-data
+      mountPath: /var/lib/postgresql/data
+      sizeGB: 1
+
+  - type: web
+    name: wellspace-app
+    dockerfilePath: ./Dockerfile
+    plan: free
+    envVars:
+      - key: DB_URL
+        fromService:
+          type: pserv
+          name: wellspace-postgres
+          property: connectionString
+      - key: POSTGRES_USER
+        fromService:
+          type: pserv
+          name: wellspace-postgres
+          envVarKey: POSTGRES_USER
+      - key: POSTGRES_PASSWORD
+        fromService:
+          type: pserv
+          name: wellspace-postgres
+          envVarKey: POSTGRES_PASSWORD
+      - key: SPRING_PROFILES_ACTIVE
+        value: docker
