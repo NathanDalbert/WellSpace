@@ -1,13 +1,10 @@
-services:
-  - type: pserv
-    name: wellspace-postgres
+databases:
+  - name: wellspace-postgres
     plan: free
-    envVars:
-      - key: POSTGRES_DB
-        value: wellspace
-      - key: POSTGRES_USER
-        value: wellspace_user
+    databaseName: wellspace
+    user: wellspace_user
 
+services:
   - type: web
     name: wellspace-app
     runtime: docker
@@ -15,19 +12,16 @@ services:
     plan: free
     envVars:
       - key: DB_URL
-        fromService:
-          type: pserv
+        fromDatabase:
           name: wellspace-postgres
           property: connectionString
       - key: POSTGRES_USER
-        fromService:
-          type: pserv
+        fromDatabase:
           name: wellspace-postgres
-          envVarKey: POSTGRES_USER
+          property: user
       - key: POSTGRES_PASSWORD
-        fromService:
-          type: pserv
+        fromDatabase:
           name: wellspace-postgres
-          envVarKey: POSTGRES_PASSWORD
+          property: password
       - key: SPRING_PROFILES_ACTIVE
         value: docker
