@@ -1,7 +1,6 @@
 services:
   - type: pserv
     name: wellspace-postgres
-    dockerImage: postgres
     plan: free
     envVars:
       - key: POSTGRES_DB
