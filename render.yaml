@@ -10,6 +10,10 @@ services:
     runtime: docker
     dockerfilePath: ./Dockerfile
     plan: free
+    startCommand: env
+    healthCheck:
+      path: /v3/api-docs
+      initialDelaySeconds: 45
     envVars:
       - key: DB_URL
         fromDatabase:
