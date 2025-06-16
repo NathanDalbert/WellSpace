@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -69,5 +70,24 @@ public class ReservaService implements ReservaServiceInterface {
             throw new RuntimeException("Reserva não encontrada para exclusão");
         }
         reservaRepository.deleteById(id);
+    }
+
+    @Override
+    public List<ReservaResponse> buscarPorLocatarioId(UUID locatarioId) {
+        usuarioRepository.findById(locatarioId)
+                .orElseThrow(() -> new RuntimeException("Usuário locatário não encontrado"));
+
+        List<Reserva> reservas = reservaRepository.findByLocatarioId(locatarioId);
+
+        return reservas.stream()
+                .map(reservaMapper::toResponseDTO)
+                .toList();
+    }
+    @Override
+    public List<ReservaResponse> listarPorLocadorId(UUID locadorId) {
+        List<Reserva> reservas = reservaRepository.findByLocadorId(locadorId);
+        return reservas.stream()
+                .map(reservaMapper::toResponseDTO)
+                .collect(Collectors.toList());
     }
 }

@@ -2,7 +2,6 @@ package com.WellSpace.modules.reservas.controller;
 
 import com.WellSpace.modules.reservas.DTO.ReservaRequest;
 import com.WellSpace.modules.reservas.DTO.ReservaResponse;
-
 import com.WellSpace.modules.reservas.services.ReservaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,22 +33,26 @@ public class ReservaController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ReservaResponse> buscarReservaPorId(@PathVariable UUID id) {
-        try {
-            ReservaResponse reserva = reservaService.buscarPorId(id);
-            return new ResponseEntity<>(reserva, HttpStatus.OK);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        ReservaResponse reserva = reservaService.buscarPorId(id);
+        return new ResponseEntity<>(reserva, HttpStatus.OK);
     }
-
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletarReserva(@PathVariable UUID id) {
-        try {
-            reservaService.deletarReserva(id);
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        } catch (RuntimeException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+        reservaService.deletarReserva(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+
+    @GetMapping("/locador/{locadorId}")
+    public ResponseEntity<List<ReservaResponse>> listarReservasPorLocadorId(@PathVariable UUID locadorId) {
+        List<ReservaResponse> reservas = reservaService.listarPorLocadorId(locadorId);
+        return new ResponseEntity<>(reservas, HttpStatus.OK);
+    }
+
+    @GetMapping("/locatario/{locatarioId}")
+    public ResponseEntity<List<ReservaResponse>> buscarReservasPorLocatario(@PathVariable UUID locatarioId) {
+        List<ReservaResponse> reservas = reservaService.buscarPorLocatarioId(locatarioId);
+        return new ResponseEntity<>(reservas, HttpStatus.OK);
     }
 }
