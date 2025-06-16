@@ -15,4 +15,6 @@ public interface ReservaServiceInterface {
     List<ReservaResponse> listarTodas();
 
     void deletarReserva(UUID id);
+    List<ReservaResponse> listarPorLocadorId(UUID locadorId);
+    List<ReservaResponse> buscarPorLocatarioId(UUID locatarioId);
 }
