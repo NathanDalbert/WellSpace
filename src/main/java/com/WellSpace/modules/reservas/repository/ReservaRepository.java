@@ -10,4 +10,6 @@ import java.util.UUID;
 @Repository
 public interface ReservaRepository extends JpaRepository<Reserva, UUID> {
 
+    List<Reserva> findByLocadorId(UUID locadorId);
+    List<Reserva>findByLocatarioId(UUID locatarioId);
 }
