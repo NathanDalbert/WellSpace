@@ -77,7 +77,7 @@ public class ReservaService implements ReservaServiceInterface {
         usuarioRepository.findById(locatarioId)
                 .orElseThrow(() -> new RuntimeException("Usuário locatário não encontrado"));
 
-        List<Reserva> reservas = reservaRepository.findByLocatarioId(locatarioId);
+        List<Reserva> reservas = reservaRepository.findByLocatarioUsuarioId(locatarioId);
 
         return reservas.stream()
                 .map(reservaMapper::toResponseDTO)
@@ -85,7 +85,7 @@ public class ReservaService implements ReservaServiceInterface {
     }
     @Override
     public List<ReservaResponse> listarPorLocadorId(UUID locadorId) {
-        List<Reserva> reservas = reservaRepository.findByLocadorId(locadorId);
+        List<Reserva> reservas = reservaRepository.findByLocadorUsuarioId(locadorId);
         return reservas.stream()
                 .map(reservaMapper::toResponseDTO)
                 .collect(Collectors.toList());
