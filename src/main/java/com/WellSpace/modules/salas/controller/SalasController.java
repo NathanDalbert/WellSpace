@@ -40,7 +40,7 @@ public class SalasController {
                 return ResponseEntity.badRequest().body("Requisição não pode ser nula.");
             }
             if (req.usuarioId() == null) {
-                return ResponseEntity.badRequest().body("O ID do usuário não pode ser nulo.");
+                return ResponseEntity.badRequest().body("O ID do usuário não pode ser nulo na requisição.");
             }
             SalasResponse resp = salasServiceInterface.criarSala(req, req.usuarioId());
             return ResponseEntity.status(201).body(resp);
@@ -67,7 +67,29 @@ public class SalasController {
         }
     }
 
-    @GetMapping("/buscar-sala/{id}") // <-- NEW ENDPOINT
+    @GetMapping("/usuario/{usuarioId}")
+    @Operation(summary = "Lista todas as salas cadastradas por um usuário específico")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Lista de salas do usuário retornada com sucesso!"),
+            @ApiResponse(responseCode = "400", description = "ID do usuário inválido ou nulo."),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor ao listar salas do usuário")
+    })
+    public ResponseEntity<?> listarSalasPorUsuario(@PathVariable UUID usuarioId) {
+        try {
+            if (usuarioId == null) {
+                return ResponseEntity.badRequest().body("ID do usuário não pode ser nulo.");
+            }
+            List<SalasResponse> salas = salasServiceInterface.listarSalasPorUsuario(usuarioId);
+            return ResponseEntity.ok(salas);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return ResponseEntity.status(500).body("Erro ao listar salas por usuário: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/buscar-sala/{id}")
     @Operation(summary = "Busca uma sala específica pelo ID")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Sala encontrada com sucesso!"),

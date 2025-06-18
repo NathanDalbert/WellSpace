@@ -21,4 +21,7 @@ public interface SalasServiceInterface {
     void deletarSala(UUID id);
     SalasResponse alterarDisponibilidade(UUID id, DisponibilidadeSalaEnum disponibilidadeSala);
     SalasResponse buscarSalaPorId(UUID id);
+    List<SalasResponse> listarSalasPorUsuario(UUID usuarioId);
+
+
 }

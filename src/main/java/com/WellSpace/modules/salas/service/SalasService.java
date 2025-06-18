@@ -144,13 +144,12 @@ public class SalasService implements SalasServiceInterface {
     private boolean isWithinTimeRange(Salas sala, LocalTime inicio, LocalTime fim) {
         return !sala.getDisponibilidadeInicio().isBefore(inicio) && !sala.getDisponibilidadeFim().isAfter(fim);
     }
-
-    // Novo método para buscar salas por usuarioId
+    @Override
     public List<SalasResponse> listarSalasPorUsuario(UUID usuarioId) {
         if (usuarioId == null) {
             throw new IllegalArgumentException("ID do usuário não pode ser nulo.");
         }
-        List<Salas> salas = salasRepository.findAll(); // Ajuste se precisar de filtro por usuário
+        List<Salas> salas = salasRepository.findAll();
         return salas.stream()
                 .filter(s -> s.getUsuario().getUsuarioId().equals(usuarioId))
                 .map(salasMapper::toResponse)
