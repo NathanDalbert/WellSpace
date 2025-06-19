@@ -18,8 +18,12 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
+
+import com.WellSpace.modules.usuario.domain.ENUM.UsuarioRole;
 
 @RestController
 @RequestMapping("/usuario")
@@ -42,7 +46,14 @@ public class UsuarioController {
             return ResponseEntity.ok(usuarioResponse);
         } catch (UsuarioNaoEncontradoException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new UsuarioResponse(
-                    null, e.getMessage(), null, null, null, null));
+                    null,
+                    e.getMessage(),
+                    null,
+                    Optional.empty(),
+                    Optional.empty(),
+                    Optional.empty(),
+                    null
+            ));
         }
     }
 
@@ -63,7 +74,14 @@ public class UsuarioController {
             return ResponseEntity.ok(usuarioResponse);
         } catch (UsuarioNaoEncontradoException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new UsuarioResponse(
-                    null, e.getMessage(), null, null, null, null));
+                    null,
+                    e.getMessage(),
+                    null,
+                    Optional.empty(),
+                    Optional.empty(),
+                    Optional.empty(),
+                    null
+            ));
         }
     }
 

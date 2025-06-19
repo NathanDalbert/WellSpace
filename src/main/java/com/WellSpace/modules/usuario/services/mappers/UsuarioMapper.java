@@ -31,7 +31,8 @@ public class UsuarioMapper {
                 usuario.getEmail(),
                 Optional.ofNullable(usuario.getFotoPerfil()),
                 Optional.ofNullable(usuario.getIntegridade()),
-                Optional.ofNullable(usuario.getDataNascimento())
+                Optional.ofNullable(usuario.getDataNascimento()),
+                usuario.getUsuarioRole() != null ? usuario.getUsuarioRole() : null
         );
     }
 }
