@@ -63,7 +63,7 @@ public class SalasService implements SalasServiceInterface {
         Salas salaSalva = salasRepository.save(sala);
 
 
-         usuario.setUsuarioRole(UsuarioRole.LOCATARIO);
+         usuario.setUsuarioRole(UsuarioRole.LOCADOR);
          usuarioRepository.save(usuario);
 
         return salasMapper.toResponse(salaSalva);
