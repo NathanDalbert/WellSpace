@@ -44,7 +44,7 @@ public record UsuarioRegristro(
         LocalDate dataNascimento,
 
 
-        @Schema(description = "Papel de usuário (role) do usuário",required = true, example = "LOCADOR")
+        @Schema(description = "Papel de usuário (role) do usuário", example = "LOCADOR")
         UsuarioRole usuarioRole
 ) {
 }

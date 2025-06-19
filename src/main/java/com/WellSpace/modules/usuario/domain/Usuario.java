@@ -46,7 +46,7 @@ public class Usuario {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "user_role", nullable = false, length = 50)
-    private UsuarioRole usuarioRole = UsuarioRole.LOCADOR;
+    private UsuarioRole usuarioRole = UsuarioRole.LOCATARIO;
 
     @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Contato> contatos;
@@ -61,7 +61,7 @@ public class Usuario {
         this.fotoPerfil = fotoPerfil;
         this.integridade = integridade;
         this.dataNascimento = dataNascimento;
-        this.usuarioRole = UsuarioRole.LOCADOR;
+        this.usuarioRole = UsuarioRole.LOCATARIO;
     }
 
     public static Usuario newUsuario(String nome, String email, String senha, String fotoPerfil, Boolean integridade, LocalDate dataNascimento) {

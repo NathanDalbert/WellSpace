@@ -53,7 +53,7 @@ public class AuthService {
         usuario.setSenha(passwordEncoder.encode(usuarioRegristro.senha()));
 
         if (usuarioRegristro.usuarioRole() == null) {
-            usuario.setUsuarioRole(UsuarioRole.LOCADOR);
+            usuario.setUsuarioRole(UsuarioRole.LOCATARIO);
         } else {
             usuario.setUsuarioRole(usuarioRegristro.usuarioRole());
         }
