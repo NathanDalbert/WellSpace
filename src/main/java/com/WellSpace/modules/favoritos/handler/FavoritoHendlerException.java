@@ -11,7 +11,7 @@ import java.util.Map;
 
 
 @RestControllerAdvice
-public class GlobalHendlerException {
+public class FavoritoHendlerException {
 
 
     @ExceptionHandler(FavoritoJaExisteException.class)
