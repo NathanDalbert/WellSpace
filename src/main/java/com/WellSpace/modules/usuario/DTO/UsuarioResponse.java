@@ -1,5 +1,6 @@
 package com.WellSpace.modules.usuario.DTO;
 
+import com.WellSpace.modules.usuario.domain.ENUM.UsuarioRole; // Importar UsuarioRole
 import java.time.LocalDate;
 import java.util.Optional;
 import java.util.UUID;
@@ -10,5 +11,6 @@ public record UsuarioResponse(
         String email,
         Optional<String> fotoPerfil,
         Optional<Boolean> integridade,
-        Optional<LocalDate> dataNascimento
-     ) {}
+        Optional<LocalDate> dataNascimento,
+        UsuarioRole usuarioRole
+) {}
