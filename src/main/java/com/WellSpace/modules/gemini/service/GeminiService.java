@@ -33,7 +33,7 @@ public class GeminiService {
 
 
     private String getGeminiUrl() {
-        return "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=" + apiKey;
+        return "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" + apiKey;
     }
 
 
