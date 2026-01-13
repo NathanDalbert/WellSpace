@@ -29,3 +29,21 @@ services:
           property: password
       - key: SPRING_PROFILES_ACTIVE
         value: docker
+      - key: APP_FRONTEND_URL
+        sync: false
+      - key: API_SECRET
+        sync: false
+      - key: MAIL_HOST
+        sync: false
+      - key: MAIL_PORT
+        sync: false
+      - key: MAIL_USERNAME
+        sync: false
+      - key: MAIL_PASSWORD
+        sync: false
+      - key: MAIL_SMTP_AUTH
+        sync: false
+      - key: MAIL_SMTP_STARTTLS_ENABLE
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
