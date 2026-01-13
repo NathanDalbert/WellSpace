@@ -1,5 +1,6 @@
 package com.WellSpace.Security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +18,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import lombok.AllArgsConstructor;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Configuration
@@ -25,6 +27,9 @@ import java.util.List;
 public class SecurityConfig {
 
     private final SecurityFilter securityFilter;
+
+    @Value("${app.frontend.url:http://localhost:53145}")
+    private String frontendUrl;
 
     @Bean
     public DefaultSecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -48,10 +53,17 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration corsConfiguration = new CorsConfiguration();
-        corsConfiguration.setAllowedOrigins(List.of(
-                "http://localhost:53145",
-                "http://localhost:8080"
-        ));
+
+        List<String> allowedOrigins = new ArrayList<>();
+        allowedOrigins.add("http://localhost:53145");
+        allowedOrigins.add("http://localhost:8080");
+
+        // Adiciona a URL do frontend de produção se estiver configurada
+        if (frontendUrl != null && !frontendUrl.equals("http://localhost:53145")) {
+            allowedOrigins.add(frontendUrl);
+        }
+
+        corsConfiguration.setAllowedOrigins(allowedOrigins);
         corsConfiguration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         corsConfiguration.setAllowedHeaders(List.of("*"));
         corsConfiguration.setAllowCredentials(true);
