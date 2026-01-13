@@ -1,9 +1,3 @@
-databases:
-  - name: wellspace-postgres
-    plan: free
-    databaseName: wellspace
-    user: wellspace_user
-
 services:
   - type: web
     name: wellspace-app
@@ -16,17 +10,11 @@ services:
       initialDelaySeconds: 45
     envVars:
       - key: DB_URL
-        fromDatabase:
-          name: wellspace-postgres
-          property: connectionString
+        sync: false
       - key: POSTGRES_USER
-        fromDatabase:
-          name: wellspace-postgres
-          property: user
+        sync: false
       - key: POSTGRES_PASSWORD
-        fromDatabase:
-          name: wellspace-postgres
-          property: password
+        sync: false
       - key: SPRING_PROFILES_ACTIVE
         value: docker
       - key: APP_FRONTEND_URL
@@ -46,4 +34,6 @@ services:
       - key: MAIL_SMTP_STARTTLS_ENABLE
         sync: false
       - key: GEMINI_API_KEY
+        sync: false
+      - key: CLOUDINARY_URL
         sync: false
